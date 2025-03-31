@@ -1,0 +1,72 @@
+
+\section{Code versions and Download}
+\label{ch:versions}
+
+The development of the NBODY code has begun in the 1960s
+\cite{a_63}, though there exist some earlier precursors
+\cite{vH_60}, \cite{vH_63}.
+It has set a quasi-standard for the precise direct integration
+of gravitating many-body systems.
+There exist several code groups (NBODY0--7, and a number of
+special implementations) for different usage, some of which
+are rather of historical interest.
+
+The current code is available via \textsc{ github}\footnote{\url{https://github.com/nbody6ppgpu/Nbody6PPGPU-beijing}}. Note that a different service is provided by Long Wang, quoted here\cite{Varrietal2018}. 
+The documents and input samples are included.
+%In irregular intervals updates of the code are provided on
+%this ftp-site.
+%For those, who keep synchronicity with NBODY6++, upgrades and
+%bugfixes are explained and there is usually a special README
+%file detailing the changes.
+
+The original $N$--body codes can be accessed publicly
+via Sverre Aarseth's web sites at\\
+\protect{\tt ftp://ftp.ast.cam.ac.uk/pub/sverre/} $\;$ and  $\;$
+\protect{\tt http://www.sverre.com/} .
+
+Special branches under our \textsc{ github} are in preparation for nuclear star clusters with central supermassive star accreting black hole and an optional accretion disk around (stardisk version), full Post-Newtonian dynamics, and inclusion of massless particles. 
+
+%Standard version: Main Supervisor: Rainer Spurzem Co-Supervisor: Wu %Kai, Shu Qi, Francesco Flammini Dotti.... \\
+%Star-disk version: \\
+%Massless Version: ... \\
+%%%%%
+%commented version of nb6 on github:
+%% https://github.com/kaiwu-astro/Nbody6PPGPU-beijing (all-in-one version) LAST PUSH into main version April 2022 
+%% -> A dev branch is up-to-date with today (23 June 2022)
+%Massless (private repository) just for reference as of now (NOT UP TO DATE AS WELL!) https://github.com/FrancescoFlammini/NBODY6-GPU-ML
+
+
+
+\vspace{1cm}
+\noindent
+A brief comparison of the code versions:\\ [2ex]
+%
+ITS: Individual time--steps \\
+ACS: Neighbour scheme (Ahmad--Cohen scheme) with block time--steps\\
+KS: KS--regularization of few-body subsystems \\
+HITS: Hermite scheme integration method combined with hierarchical
+      block time steps\\
+PN: Post-Newtonian terms\\
+CC: Classical regularized chain \\
+AR: Algorithmic regularization chain \\
+MPI: Message Passing Interface, multi-node multi-CPU parallelization \\
+GPU: use of GPU acceleration (if also MPI: multi-node many GPU) \\
+r: restricted Post-Newtonian, only orbit-averaged energy loss by grav. radiation
+
+\let\V\checkmark
+\begin{center}
+    \begin{tabular}{|p{3cm}|c|c|c|c|c|c|c|c|c|} \hline
+                     & ITS & ACS & KS & HITS & PN & CC & AR & MPI & GPU \\\hline
+    \texttt{NBODY1}     & \V  &     &    &      &   &  &   &  &\\   
+    \texttt{NBODY2}     &     & \V  &    & \V   &   &  &   &  &\\   
+    \texttt{NBODY3}     & \V  &     & \V &      &   &  &   &  &\\   
+    \texttt{NBODY4}     &     &     & \V & \V   &   &  &   &  &\\   
+    \texttt{NBODY5}     & \V  & \V  & \V &      &   &  &   &  &\\   
+    \texttt{NBODY6}     &     & \V  & \V & \V   & r &\V &\V&  &\\
+    \texttt{NBODY6GPU}  &     & \V  & \V & \V   &\V &\V &\V&  &\V\\
+    \texttt{NBODY6++}   &     & \V  & \V & \V   &   &\V& &\V&\\
+    \texttt{NBODY6++GPU}&     & \V  & \V & \V   & r &\V& &\V&\V\\
+    \texttt{NBODY7}     &     & \V  & \V & \V   & r &  &\V& &\V\\\hline
+    \end{tabular}
+\end{center}
+\let\V\undefined

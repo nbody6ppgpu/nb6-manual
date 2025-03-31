@@ -1,0 +1,183 @@
+%%%
+%%%  LaTeX-Template fuer Buecher und Broschueren
+%%%
+%%%  Emil Khalisi, MPI fuer Kernphysik, Heidelberg
+%%%  emil.khalisi @ mpi-hd . mpg . de
+%%%  Tel.: 06221 / 516 -339
+%%%
+%%%  November 2012
+%%%
+%%%  Updated by Long Wang in November 2014
+%%%  Email: longwang.astro@gmail.com
+%%% 
+%%% checking the editing option... 
+
+\documentclass[11pt,twoside,a4paper]{report}
+
+% ---------- Initialize Packages
+%
+%\usepackage[latin1]{inputenc}   % deutsche Tastatur
+\usepackage[T1]{fontenc}        % Richtig trennen!
+\usepackage{mathptmx}
+%%\usepackage[german]{babel}      % ! Inkompatibel mit \usepackage{german}
+% \usepackage[german]{babel}      % ! entweder [german] oder [british] !
+%\usepackage{amsmath}            % Erweiterungen fuer mathematische Formeln
+\usepackage{amssymb}            % weitere nuetzliche Erweiterungen
+%
+\usepackage{lscape}             % Landscape-Umgebung
+\usepackage{longtable}          % seitenuebergreifende Tabellen
+%\floatstyle{plain}
+%\usepackage{rotating}
+%\usepackage{eurosym}            % Laden des Euro-Symbols
+%\usepackage{units}              % Einheiten und Brueche im nice-, text- und math-mode
+
+\usepackage{eepic}
+\usepackage[dvips]{epsfig}
+%\usepackage{subfigure}
+\usepackage{fancyhdr}
+
+\usepackage{auto-pst-pdf}
+\usepackage{url}
+\usepackage{listings}
+%\usepackage{pdflscape}
+\usepackage{makecell}
+\usepackage{float}
+\usepackage{epstopdf}
+\newcommand{\ff}[1]{\textcolor{red}{\bf #1}}
+  \epstopdfDeclareGraphicsRule{.pdf}{png}{.png}{convert #1 \OutputFile}
+\floatstyle{plain}
+\newfloat{cctimes}{th}{ccc}[section]
+
+
+
+% ---------- Paper characteristics
+%
+\setlength{\textwidth}{15.0cm}
+\setlength{\textheight}{23.0cm}
+%\addtolength{\textheight}{4cm}
+%\addtolength{\textwidth}{2.6cm}
+\setlength{\oddsidemargin}{0.5cm}
+\setlength{\evensidemargin}{0.2cm}
+\setlength{\topmargin}{-0.3cm}
+%\addtolength{\columnsep}{0.4cm}
+%
+%%%%% Zeilenformatierung, siehe LaTeX-Begleiter, S. 51
+%
+%%%%% Seitenformatierung
+%
+\setlength{\textwidth}{15.0cm}
+\setlength{\textheight}{23.0cm}
+%\addtolength{\textheight}{4cm}
+%\addtolength{\textwidth}{2.6cm}
+\setlength{\oddsidemargin}{0.5cm}
+\setlength{\evensidemargin}{0.2cm}
+\setlength{\topmargin}{-0.3cm}
+%\addtolength{\columnsep}{0.4cm}
+
+%\setcounter{secnumdepth}{4}
+%\setcounter{tocdepth}{1}
+
+
+%%%%% Umbenennung von Section zu Chapter zwecks Layout
+%
+\renewcommand{\chapter}{\section}
+\renewcommand{\thesection}{\arabic{section}}
+
+%%%%%Header from booklet >Lichtph\"anomene<
+%% \pagestyle{fancy}
+%% \renewcommand{\subsectionmark}[1]{\markright{#1}{}}
+%% \renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+
+%%%%% Seitenzahlen auf oberer Seitenlinie
+%
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection\ \, #1}{}}
+\renewcommand{\subsectionmark}[1]%
+                        {\markright{\thesubsection\ \, #1}{}}
+
+%%%%% Titel des Kapitels auf oberer Seitenlinie
+%
+\lhead[\itshape \thepage]{\itshape \rightmark}
+\rhead[\itshape \leftmark]{\itshape \thepage}
+\cfoot{}
+
+
+%%%%% Umbenennung >Figure< statt >Abbildung<
+%
+\makeatletter
+\@addtoreset{figure}{section}
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+\renewcommand{\@makecaption}[2]%             % >Figure<  statt  >Abbildung<
+   {\small Figure {\thefigure}: #2} %    Begleiter, Ch. 6.5
+%\renewcommand{\@makecaption}{\footnotesize} % Gr\"osse d. Captionschrift
+%\renewcommand{\@mkboth}{\markboth{}}        %
+\makeatother
+
+
+\begin{document}
+
+%Fuer Landscape- Format:
+%\special{landscape}         % hinter dem \begin{document}- Befehl!
+%documentclass[landscape]    % oben in den Optionen zu erg\"anzen!
+
+
+
+
+% Beginn des Hauptdokumentes.
+% ===========================
+
+
+%%% Title pages.
+\include{head}
+ 
+\include{introduction}
+ 
+\include{history}
+ 
+%%% Practical steps.
+\include{startrun}
+ 
+\include{inputvar}
+ 
+\include{thresholds}
+ 
+\include{diagnostics}
+ 
+%%% Prallel runs.
+\include{parallel}
+ 
+%%% Chapter 7 of Emil's PhD-thesis.
+\include{hermite}
+ 
+\include{timesteps}
+ 
+\include{neighbourscheme}
+ 
+\include{regularization}
+ 
+%%% Nbody-units.
+\include{nbunits}
+ 
+%%% Output file documents (L. Wang)
+ 
+\include{output_unit}
+ 
+\include{hdf5}
+
+\include{parameters}
+
+\include{flowchart}
+ 
+%%% References.
+\include{references}
+
+% ===========================
+\end{document}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "nbody6xx"
+%%% End:

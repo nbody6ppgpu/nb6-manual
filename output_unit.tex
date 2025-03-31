@@ -1,0 +1,861 @@
+%%\documentclass[10pt]{article}
+
+%%\usepackage[a4paper]{geometry}
+%%\usepackage{hyperref}
+%%\usepackage{graphicx,graphics}
+%%\usepackage{longtable}
+%%\usepackage{times}
+
+
+%%\title{Nbody6++ Output List}
+
+%%\author{Long Wang}
+
+%%\begin{document}
+
+%%\maketitle
+
+
+\section{Output}
+\label{ch:output}
+
+{\bf The to-do list of this chapter
+
+\begin{itemize}
+    \item Check if the Table 16/17 is up-to-date,i.e., remove erroneous or changed definition, add new definitions, correct any grammar error
+    \item Check in Table 16 if stellar evolution is up-to-date. 
+    \item add GR parameters
+    \item Table 18 correct any possible error and update. Common things to correct are wrong displayed units (CHECK THE NBU/Real units!!!!), outdated or not used files, other
+    \item IMPORTANT: if you are not Rainer or Francesco Flammini Dotti, but wish to contribute, please CHECK (use a symbol or change the color) of the output you corrected.
+\end{itemize}
+}
+
+\ff{ATTENTION, WORK IN PROGRESS. PLEASE DOWNLOAD THE PREVIOUS VERSION AT: https://www.overleaf.com/read/zwkzkdqsqmsf}
+
+\begin{longtable}{|p{0.7in}|p{4.3in}|}
+  \caption{Definition of parameters}
+  \\\hline
+    \multicolumn{2}{|c|}{ Global properties} \\\hline
+    TIME   & time of simulation \\\hline
+    RSCALE & Half mass radius\\\hline
+    RTIDE  & Tidal radius\\\hline
+    RC     & Core radius \\\hline
+    NC     & Number of stars inside core radius \\\hline
+    MC     & Core mass \\\hline
+    VC     & r.m.s velocity inside core radius \\\hline
+    CMAX   & Maximum number density / half mass mean value \\\hline
+    RDENS(1:3)  & Density center position \\\hline
+    RHOD   & Density weighted average density $\Sigma RHO^2 / \Sigma RHO$ \\\hline
+    RHOM   & Maximum mass density / half mass mean value \\\hline
+    $\langle M\rangle$    & Average mass of star\\\hline
+    M1     & Mass of most massive star\\\hline
+    ZMASS  & Total mass of cluster \\\hline
+    MODEL  & Snapshot counter in output\\\hline
+    NRUN   & Run identification index \\\hline
+    TIDAL4 & Twice angular velocity for linearised tidel force\\\hline
+    \hline
+
+    \multicolumn{2}{|c|}{ Energy } \\\hline 
+    DE    & relative energy error \\\hline
+    DELTA & absolute energy error \\\hline
+    BE(1) & Initial total energy  \\\hline
+    BE(2) & Last adjust total energy  \\\hline
+    BE(3) & Current total energy  \\\hline
+    ZKIN   & Kinetic energy \\\hline
+    POT    & Potential energy \\\hline
+    ETIDE  & Tidal energy \\\hline
+    ETOT   & Total energy \\\hline
+    E      & Mechanical energy: ZKIN - POT + ETIDE (E(3)) \\\hline
+    ESUB   & Binding energy of unperturbed triples and quadruples \\\hline  
+    EMERGE & Binding energy of mergers (E(9))\\\hline
+    EBIN   & Binding energy of KS binaries \\\hline
+    ECOLL  & The difference of binding energy of inner binary at the end and begin of hierarchical systems (E(10))\\\hline
+    EMDOT  & Mechanical energy of mass loss due to stellar evolution (E(12))\\\hline
+    ECDOT  & Energy of velocity kick due to stellar evolution\\\hline
+    ECH    & Binding energy of chain \\\hline
+    EBINP  & Primordial KS binary energy (E(1))\\\hline
+    EBINN  & Energy of new KS binary formed by dynamics (E(2))\\\hline
+    EESCS  & Single escaper mechanical energy (E(4))\\\hline
+    EESCPB & Binding energy of primordial KS binary escapers (E(5))\\\hline
+    EESCPC & Mechanical energy of center mass of primordial KS binary escapers (E(6))\\\hline
+    EESCNB & Binding energy of new formed KS binary escapers (E(7))\\\hline
+    EESCNC & Mechanical energy of center mass of new KS binary escapers (E(8))\\\hline
+
+    \multicolumn{2}{|c|}{ Scaling factors (Astronomical units = $N$--body units $\times$ scaling factor)} \\\hline 
+    RBAR  & PC \\\hline
+    TSCALE& Myr \\\hline
+    TSTAR & Myr \\\hline
+    VSTAR & km/s \\\hline
+    RAU   & AU \\\hline
+    ZMBAR & Solar mass \\\hline
+    SU    & Solar radius \\\hline
+    \hline
+
+    \multicolumn{2}{|c|}{ Astronomical units } \\\hline
+    R*    & Solar radius \\\hline
+    L*    & Solar luminosity \\\hline
+    M*    & Solar mass \\\hline
+    \hline
+
+    \multicolumn{2}{|c|}{ Status number} \\\hline
+    NTOT   & Total number of particles (include all binary components, single stars and center of mass) \\\hline
+    N      & Total number of stars (binary counts as two stars) \\\hline
+    NS     & Single star number \\\hline
+    NPAIRS & Number of KS regularization pairs\\\hline
+    NMERGE & Number of mergers (stable triples) \\\hline
+    MULT   & Number of $\ge 4$ bodies merger \\\hline
+    NZERO  & Initial particle number (2* binaries + singles, initial N)\\\hline
+    NB0    & Primordial binary number \\\hline
+    NUPKS  & Unperturbed KS \\\hline
+    NPKS   & Total perturber number of KS \\\hline
+    NTYPE(1:16) & Number of stars with type 1 to 16 \\\hline
+    \hline
+
+    \multicolumn{2}{|c|}{ For stars } \\\hline
+    I     & Index of star (position in particle data array) \\\hline
+    NAME  & Identification of individual star, it's constant and unique value for each star (exclude un-physical particles like center mass and ghosts) during the whole simulation \\\hline
+    K*    & KSTAR type:   \\
+          &-1: Pre-main sequence. \\
+          & 0: Low main sequence (M < 0.7). \\
+          & 1: Main sequence. \\
+          & 2: Hertzsprung gap (HG). \\
+          & 3: Red giant (RG) branch. \\
+          & 4: Core Helium burning. \\
+          & 5: First Asymptotic giant branch (AGB). \\
+          & 6: Second AGB. \\
+          & 7: Helium main sequence. \\
+          & 8: Helium HG. \\
+          & 9: Helium giant branch. \\
+          &10: Helium white dwarf. \\
+          &11: Carbon-Oxygen white dwarf. \\
+          &12: Oxygen-Neon white dwarf. \\
+          &13: Neutron star. \\
+          &14: Black hole. \\
+          &15: Massless supernova remnant. \\\hline
+    M     & Mass of star \\\hline
+    X(1:3)& Three dimension position \\\hline
+    V(1:3)& Three dimension velocity \\\hline
+    DM    & Current mass loss due to stellar evolution ($N$--body units)\\\hline
+    DMA   & Accumulated mass loss due to stellar evolution \\\hline
+    STEP  & Irregular time step of star\\\hline
+    STEPR & Regular time step of star\\\hline
+    ZKIN  & Kinetic energy \\\hline
+    POT   & Potential \\\hline
+    NB    & Neighbor number \\\hline
+    RNB   & Neighbor radius \\\hline
+    RHO   & Mass density of individual star calculated by nearest 5 neighbors, (only avaiable for particles inside core radius \\\hline
+    \hline
+
+    \multicolumn{2}{|c|}{ Stellar evolution of star } \\\hline    
+    RS    & star radius \\\hline
+    L     & luminosity \\\hline
+    Teff  & effective temperature \\\hline
+    ROT   & angular velocity of star \\\hline
+    \hline
+
+    \multicolumn{2}{|c|}{ For binaries } \\\hline
+    SEMI  & semi-major axis \\\hline
+    ECC   & eccentricity \\\hline
+    PERI  & Pericenter distance \\\hline
+    R12   & distance between two members of binary \\\hline
+    RI    & distance to density center \\\hline
+    VI    & velocity of center of mass\\\hline
+    P     & Orbit period \\\hline
+    I1/I2 & Index for binary component 1/2 (Not always equal name)\\\hline
+    ICM   & Index for center mass particle (Not always equal name)\\\hline
+    NP    & perturber number \\\hline
+    H     & Binary energy per unit mass \\\hline
+    EB    & Binary energy: M(I1)*M(I2)/M(ICM)*H\\\hline
+    GAMMA & Perturbation on KZ binary \\\hline
+    IPAIR & Pair index for binary \\\hline
+ STEP(I1) & KS time step of binary \\\hline
+       TC & circularization timescale for current pericenter \\\hline
+
+    FLAG-PB & Primordial binary indicator. -1: Primordial bianry; 0: New binary \\\hline 
+    INEW    & Index of new star generated by binary collision or coalescence\\\hline
+    \hline
+
+    \multicolumn{2}{|c|}{ For hierarchical systems } \\\hline    
+    IM     & merger index \\\hline
+    IMC    & Number count of current merger \\\hline
+    INPAIR & Index of inner binary \\\hline
+    INCM   & Inner binary center mass index \\\hline
+    NAME(IM) & Merger center mass name \\\hline
+    I1/I2  & Inner binary two component indexs \\\hline
+    I3     & Outer particle index \\\hline
+    ECC0   & Inner binary orbit eccentricity \\\hline
+    ECC1   & Outer orbit eccentricity \\\hline
+    EB0    & Inner binary energy \\\hline
+    EB1    & Outer orbit energy \\\hline
+    P0     & Inner binary orbit period \\\hline
+    P1     & Outer orbit period \\\hline
+    R12    & Inner binary components seperation \\\hline
+    RIN3   & Separation between inner center mass and outer component \\\hline
+    TG     & Inner orbit eccentricity growth timescale \\\hline
+    ECCMIN & Minimum eccentricity of inner binary orbit\\\hline
+    ECCMAX & Maximum eccentricity of inner binary orbit \\\hline
+    PERIM  & smallest pericenter distance of outer particle orbit\\\hline
+    PCR    & Stability triple system criterion for PERIM  (assess.f), the real stability criterion is more complicated and depend on the ECC1 \\\hline
+    SEMI0  & Inner binary orbit semi-major axis \\\hline
+    SEMI1  & Outer orbit semi-major axis \\\hline
+    INA    & Inclination angle in unit degree \\\hline
+    FLAG-H & Hierarchical system indicator. -1: merger, triple, chaotic binary, tidal circularization binary...; 0: normal binary \\\hline
+    \multicolumn{2}{|c|}{ For quadruple systems } \\\hline    
+    OCM    & Outer binary center of mass index \\\hline
+    OCPAIR & Index of outer binary \\\hline
+    I3/I4  & Outer binary two component index \\\hline
+    ECC2   & Outer binary eccentricity \\\hline
+    EB2    & Outer binary energy \\\hline
+    SEMI2  & Outer binary orbit semi-major axis \\\hline
+    R34    & Outer binary components seperation \\\hline
+    DP34   & Difference potential correction for the outer binary \\\hline
+    \multicolumn{2}{|c|}{ For chain } \\\hline    
+    IC     & Chain index \\\hline
+    NCH    & Number of chain members \\\hline
+    ECH    & Total energy of perturbed system (N-body interface) \\\hline
+    NP     & Perturbers of chain \\\hline
+    ENERGY & Total energy of chain \\\hline
+    RSUM   & Sum of all chain distances \\\hline
+    RGRAV  & Gravitational radius ((sum M(I)*M(J))/ABS(ENERGY)) \\\hline
+    TCR    & Local crossing time ((sum M(I))**2.5/ABS(2*ENERGY)**1.5) \\\hline
+    RMAXS  & Maximum size of unperturbed configuration \\\hline
+    RIJ(i-j) & Distance between member i and j \\\hline
+    ICM1   & First binary index after termination\\\hline
+    ICM2   & Second binary index after termination \\\hline
+
+    \multicolumn{2}{|c|} {For kick} \\\hline
+    M0     & mass before kick \\\hline
+    MN     & mass after kick \\\hline
+    VK     & kick velocity after limit check\\\hline
+    VI     & Initial velocity of kick star in cluster \\\hline
+    VF     & Final velocity of kicked star in cluster\\\hline
+    VK0    & Kick velocity generated from Henon's method (Douglas Heggie 22/5/97) \\\hline
+    FB     & Fallback ratio, VK = VK*(1-FB) \\\hline
+    VESC   & cluster escape velocity \\\hline
+    VDIS   & escape velocity from binary system: SQRT(2*M(ICM)/R12) \\\hline
+
+\end{longtable}
+
+\begin{longtable}{|p{0.7in}|p{4.3in}|}
+  \caption{Notice for Table\ref{tb:main}}
+  \\\hline
+  \multicolumn{2}{|c|}{ File format } \\\hline    
+    Header-*   & The Header of file with line number *, the description of it is shown in the right cell \\\hline
+    H-Label-*  & Content labels are shown at the line number *, data begin from the next line\\\hline
+    F-Label    & Content labels are shown at the beginning of each line \\\hline
+    I-Label    & Content labels are shown before each data \\\hline
+    N-Label    & No labels in file \\\hline
+    \hline
+
+    \multicolumn{2}{|c|}{ Frequency (freq.) } \\\hline
+    $T_{event}$ & Output when event is triggered \\\hline
+    $T_0$ & Output during initialization \\\hline
+    $\Delta T_{out}$ & Output time interval (input parameter DELTAT) \\\hline
+    $\Delta T_{adj}$ & Adjust time interval (input parameter DTADJ) \\\hline
+    $\Delta T_{HR}$  & Stellar evolution output time interval (input parameter DTPLOT) \\\hline
+    NFIX & Frequency of output (input parameter) \\\hline
+
+    \multicolumn{2}{|c|}{ option } \\\hline
+    $\#[num]$ & KZ option [num]\\\hline
+    $\|$ & logical or \\\hline
+    $\&\&$ & logical and \\\hline
+    CHAIN & Use chain:  $\#15>0 \&\& (\#30>0 \| \#30=-1)$ \\\hline
+    USE\_GPU & switch on GPU during compiling code \\\hline
+    USE\_HDF5 & switch on HDF5 during compiling code \\\hline
+
+\end{longtable}
+
+Table\ref{tb:main} show all output files of \textit{NBODY6++}. The filename will be named as ``[name].[unit]''. The first column [name] with suffix ``*'' means this file will output as seperated snaphshots split by TIME[NB] (shown as suffix of file name). 
+
+\begin{longtable}{||p{0.42in}|p{0.25in}|p{0.6in}|p{0.6in}|p{0.4in}|p{2.3in}||}
+  \caption{Output file information}
+  \label{tb:main}
+  \\\hline
+    name   & unit & code & option  & freq.   & content \\\hline\hline
+    conf*  & 3    & output.F   & $\#3>0$ & $\Delta T_{out}$ $\times$ NFIX  &  Basic data snapshots \\\hline
+\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{ NTOT, MODEL, NRUN, NK  }\\\hline
+\multicolumn{2}{|c|}{ Header-2 } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], NPAIRS, RBAR, ZMBAR, RTIDE, TIDAL4, RDENS(1:3), TIME/TCR, TSCALE, VSTAR, RC, NC, VC, RHOM, CMAX, RSCALE, RSMIN, DMIN1 }\\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{ M, RHO, XNS, X(1:3), V(1:3), POT, NAME (All in NB unit)}\\\hline
+\multicolumn{6}{|p{5.4in}|}{ Notice the file is unformatted (binary file). Each item output continually from 1 to NTOT. All items output in one line after two header lines.}\\
+\multicolumn{6}{|p{5.4in}|}{ Python package \texttt{struct}\footnote{https://docs.python.org/3/library/struct.html} can be used for extracting these values from the file.}\\
+\multicolumn{6}{|p{5.4in}|}{    NK :  The number of parameters in Header-2, right now is always 20} \\
+\multicolumn{6}{|p{5.4in}|}{    TCR :  Crossing time} \\
+\multicolumn{6}{|p{5.4in}|}{    RSMIN : Smallest neighbor radius obtained in last output (output.F) time }\\
+\multicolumn{6}{|p{5.4in}|}{    DMIN1 :  Smallest two body distance } \\
+\multicolumn{6}{|p{5.4in}|}{    XNS :  The fifth nearest neighbor distance, (only avaiable for particles inside core radius }\\\hline\hline
+
+    degen  & 4    & degen.f    & $\#9\geq3$  & $T_{event}$  & Binary with degenerate stars \\\hline
+\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{ RBAR, $\langle M\rangle$[M*], M1[M*], TSCALE, NB0, NZERO }\\\hline
+\multicolumn{2}{|c|}{ H-Label-2} & \multicolumn{4}{|p{4.4in}|}{ ICASE, TIME[Myr], SEMI[AU], ECC, PERI/RS, P[days], RI[PC], M(I1)[M*], M(I2)[M*], K*(I1),K*(I2),K*(ICM), NAME(I1),NAME(I2) } \\\hline
+\multicolumn{6}{|p{5.4in}|}{ ICASE: 3: normal binary; 4: CE binary; 5: physical collision binary }\\
+\multicolumn{6}{|p{5.4in}|}{ PERI/RS: Pericenter / maximum stellar radius of two members }\\\hline\hline
+
+    lagr   & 7   & lagr.f     & $\#7\geq2$   & $\Delta T_{out}$      & Lagrangian radii, average mass, average velocity, velocity dispersion output (calculation of Lagrangian radii use initial total mass of cluster)  \\\hline
+\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{ Labels and column number for each output }\\\hline
+\multicolumn{2}{|c|}{ H-Label-2} & \multicolumn{4}{|p{4.4in}|}{ $R_{lagr}$, $R_{lagr,s}$, $R_{lagr,b}$, $\langle M\rangle$, $N_{Shell}$, $\langle V_x\rangle$, $\langle V_y\rangle$, $\langle V_z\rangle$, $\langle V\rangle$, $\langle V_r\rangle$, $\langle V_t\rangle$, $\sigma^2$, $\sigma_r^2$,$\sigma_t^2$,$\langle V_{rot.}\rangle$ (All in NB units) }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ For each items above, there are 18 columns with different mass fraction(\%): 0.1, 0.3, 0.5, 1, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100 and inside core radius (exclude $R_{lagr,s}$, $R_{lagr,b}$) }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ $R_{lagr}$: Lagrangian radius }\\
+\multicolumn{6}{|p{5.4in}|}{ $R_{lagr,s}$: Single star Lagrangian radius }\\
+\multicolumn{6}{|p{5.4in}|}{ $R_{lagr,b}$: KZ binaries Lagrangian radius }\\
+\multicolumn{6}{|p{5.4in}|}{ $\langle M\rangle$: Average mass of a spherical shell defined by $R_{lagr}$}\\
+\multicolumn{6}{|p{5.4in}|}{ $\langle V_{x/y/z}\rangle$: Mass weighted average velocity in x/y/z direction}\\
+\multicolumn{6}{|p{5.4in}|}{ $\langle V_t\rangle$: Mass weighted average tangential velocity}\\
+\multicolumn{6}{|p{5.4in}|}{ $\langle V_r\rangle$: Mass weighted average radial velocity}\\
+\multicolumn{6}{|p{5.4in}|}{ $\sigma^2$: Mass weighted velocity dispersion square}\\
+\multicolumn{6}{|p{5.4in}|}{ $\sigma_r^2$: Mass weighted radius velocity dispersion square}\\
+\multicolumn{6}{|p{5.4in}|}{ $\sigma_t^2$: Mass weighted tangential velocity dispersion square}\\
+\multicolumn{6}{|p{5.4in}|}{ $\langle V_{rot.}\rangle$: Mass weighted average rotational velocity projected in x-y plane}\\\hline \hline
+
+    bdat   & 8   & ksin2.f    & $\#8>0$    & $T_{event}$  & New hierarchical (B-S)-S binary information  \\
+    & &  \texttt{NBIN} > 0 & & &
+    \\\hline
+           &     & ksinit.F   & $\#8>0$    &             & New binary information       \\\hline
+           &     & ksterm.F   & $\#8>0$    &             & End binary information       \\\hline
+\multicolumn{2}{|c|}{ I-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], NAME(I1) NANE(I2), FLAG-PB, M(I1)[NB], M(I2)[NB], EB[NB], SEMI[NB], R12[NB], GAMMA[NB], RI[NB] }\\\hline\hline
+
+    bdat*  & 9   & bindat.f   & $\#8\geq2$   & $\Delta T_{out}$      & KS binary output            \\\hline
+\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{ NPAIRS, MODEL, NRUN, N, NC, NMERGE, TIME[NB], RSCALE[NB], RTIDE[NB], RC[NB], TIME[Myr], ETIDC[NB], 0}\\\hline
+\multicolumn{2}{|c|}{ Header-2 } & \multicolumn{4}{|p{4.4in}|}{ EBINP, EBINN, E, EESCS, EESCPB, EESCPC, EESCNB, EESCNC, EMERGE, ECOLL (All in NB unit)}\\\hline
+\multicolumn{2}{|c|}{ Header-3 } & \multicolumn{4}{|p{4.4in}|}{ SBCOLL, BBCOLL, ZKIN, POT, EBIN0, EBIN, ESUB, EMERGE, BE(3), ZMASS, ZMBIN, CHCOLL, ECOLL (All in NB unit)}\\\hline
+\multicolumn{2}{|c|}{ H-Label-4 }& \multicolumn{4}{|p{4.4in}|}{ NAME(I1), NAME(I2), M1[M*], M2[M*], E[NB], ECC, P[days], SEMI[AU], RI[PC], VI[km/s], K*(I1), K*(I2), ZN[NB], RP[NB], STEP(I1)[NB], NAME(ICM), ECM[NB], K*(ICM)}\\ \hline
+\multicolumn{6}{|p{5.4in}|}{ETIDC[NB]: escape energy due to tidal force  }\\
+\multicolumn{6}{|p{5.4in}|}{SBCOLL: The difference of binding energy of inner binary at the end and begin of unperturbed triples}\\
+\multicolumn{6}{|p{5.4in}|}{BBCOLL: The difference of binding energy of inner binary at the end and begin of unperturbed B-B quadruples} \\
+\multicolumn{6}{|p{5.4in}|}{ZMBIN : Total KS binary masses }\\
+\multicolumn{6}{|p{5.4in}|}{CHCOLL: The difference of binding energy of inner binary at the end and begin of chain} \\
+\hline\hline
+
+    dat    & 10  & start.F    & $\#22=1$   & $T_0$      & Basic data after initialization \\\hline
+\multicolumn{2}{|c|}{ N-label } &  \multicolumn{4}{|p{4.4in}|}{ M[NB], X(1:3)[NB], V(1:3)[NB] }\\\hline\hline
+
+    esc    & 11  & escape.f   & $\#23=2$, 4 & $\Delta T_{adj}$      & escaping star output for single stars           \\\hline
+\multicolumn{2}{|c|}{ H-Label-1 } & \multicolumn{4}{|p{4.4in}|}{ TIME[Myr], M[M*], EESC, VI[km/s], K*, NAME} \\\hline
+\multicolumn{6}{|p{5.4in}|}{ EESC: dimensionless escape energy }\\\hline\hline
+
+   hiarch  & 12  & hiarch.f   & $\#18=1$, 3 & $T_{event}$  & New/End stable hierarchical system (mergers) information \\\hline
+\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{ RBAR, $\langle M\rangle$[M*], M1[M*], TSCALE, NB0, NZERO }\\\hline
+\multicolumn{2}{|c|}{ F-Label} & \multicolumn{4}{|p{4.4in}|}{ TIME, SEMI0, SMEI1, ECC1, PERI0, PERI0M, P1/P0, M(INCM)/M(I3), PCR/SEMI0, M(INCM)/<M>, MR, INA, NAME(I1), NAME(I2), NAME(I3), K*(INCM), ECC0, ECCMIN, ECCMAX, K*(I1), K*(I2), RSM (All in NB unit)}\\
+\multicolumn{2}{|c|}{ F-Label} & \multicolumn{4}{|p{4.4in}|}{ TIME RI/RC, SEMI0, ECC0, PERI0, P0F/P0I, RC/RSCALE, GAMMA(INCM), NKI, NKF, NPAIRS, NAME(I2) (All in NB unit)}\\ \hline
+\multicolumn{6}{|p{5.4in}|}{PERI0: Inner binary pericenter distance }\\
+\multicolumn{6}{|p{5.4in}|}{PERI0M: Inner binary minimum pericenter distance }\\
+\multicolumn{6}{|p{5.4in}|}{MR: Mass ratio of inner binary components ($>1$) }\\
+\multicolumn{6}{|p{5.4in}|}{PSM: Maximum stellar radius of two members of inner binary} \\
+\multicolumn{6}{|p{5.4in}|}{P0F/P0I: Period of inner binary at the end of merger over at the beginning of merger} \\
+\multicolumn{6}{|p{5.4in}|}{NKI: Orbit number the inner binary during the life of merger over the period of inner binary at the beginning of merger}\\
+\multicolumn{6}{|p{5.4in}|}{NKF: Orbit number the inner binary during the life of merger over the period of inner binary at the end of merger}\\
+\hline\hline
+
+    coll   & 13  & mix.f      & $\#19\geq3$  & $T_{event}$    & Mixed star (physical collision of binary without evolved stars) information     \\\hline
+\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{ RBAR, $\langle M\rangle$[M*], M1[M*], TSCALE, NB0, NZERO }\\\hline
+\multicolumn{2}{|c|}{ H-Label-2} & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], NAME(I1), NAME(I2), K*(I1), K*(I2), K*(INEW), M(I1)[M*], M(I2)[M*], M(INEW)[M*], DM[M*], RS(I1)[R*], RS(I2)[R*], RI/RC, R12[R*], ECC, P[days] }\\\hline
+
+
+    shrink  & 14  & shrink.f   &         & $T_{event}$    & Diagnostics for shrink regular time step for incoming high velocity star coming \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ I, RN, FI/FJ, DT, STEPR (All in NB unit) }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ RN: Next distance from high velocity star after DT }\\
+\multicolumn{6}{|p{5.4in}|}{ FI/FJ: force at minimum distance / current force }\\
+\multicolumn{6}{|p{5.4in}|}{ DT: evaluated time of minimum approach truncated to next time }\\\hline\hline
+
+    mix   & 15  & mix.f      & $\#19\geq3$  & $T_{event}$    & Mixed star information for the case NS/BH form \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ K*(I1), K*(I2), K*(INEW), M(I1)[M*], M(I2)[M*], M(INEW)[M*] }\\\hline\hline
+
+    hirect  & 16  & hirect.f   & $\#27=2$ (higrow.f) $\|$ $\#34>0$ (brake2.f) $\|$ $\#28>0$ (brake3.f) & $T_{event}$  & Diagnostics for rectification of hierarchical binary due to the internal energy change of system \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[Nb],NAME,K*,ECC,R12/SEMI,H,DB,DH/H }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ H: inner binary energy }\\
+\multicolumn{6}{|p{5.4in}|}{ DM: change of binding energy }\\\hline
+           &     & ksrect.f   &         & $T_{event}$    & Diagnostics for rectification of KS orbit. \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], IPAIR, R12/SEMI, H, GAMMA, DB, DH/H }\\\hline\hline
+
+   binev   & 17  & binev.f    & $\#9\geq2$   & $T_{event}$    & Binary evolution stage, output when binary change type \\\hline
+\multicolumn{2}{|c|}{ H-Label-1 } & \multicolumn{4}{|p{4.4in}|}{ TIME[Myr], NAME(I1), NAME(I2), K*(I1), K*(I2), K*(ICM), M(I1)[M*], M(I2)[M*], RS(I1)[R*], RS(I2)[R*], RI[PC], ECC, SEMI[R*], P[days], IQCOLL } \\\hline
+\multicolumn{6}{|p{5.4in}|}{Stage of the encounter in a binary system. The values range from -2 to 6. (note of the authors: tentative scale, not accurate at all yet.)\
+-2: New roche encounter \
+-1: Hyperbolic encounter \
+0: \
+1: \
+2: \
+3: Encounter phase of Roche \
+4, 5, 6: Late encounter phases}\\\hline\hline
+
+   pbin    & 18  & binout.f   & $\#8>0$    & $\Delta T_{out}$      & Diagnostics for the primordial binary which exchanges members \\\hline
+\multicolumn{2}{|c|}{ I-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], NAME(I1), NAME(I2), Flag-PB, Flag-H, M(I1)[NB], M(I2)[NB], EB[NB], SEMI[NB], ECC, GX, RI[NB], VR[NB] }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ GX: maximum perturbation (near apocenter)}\\\hline
+\multicolumn{6}{|p{5.4in}|}{ VR: radial velocity }\\\hline\hline
+
+   bwdat*  & 19  & bindat.f   & $\#8\geq2$   &             & Wide Non-KS bianry output    \\\hline
+\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB],TIME[Myr], N }\\\hline
+\multicolumn{2}{|c|}{ H-Label-2} & \multicolumn{4}{|p{4.4in}|}{ NAME(I1), NAME(I2), M1[M*], M2[M*], E[NB], ECC, P[days], SEMI[AU], RI[PC], VI[km/s], K*(I1), K*(I2) }\\\hline\hline
+
+   symb   & 20  & mdot.F     & $\#19\geq3$  & $T_{event}$    & Symbiotic stars information  \\\hline
+\multicolumn{2}{|c|}{ F-Label }  & \multicolumn{4}{|p{4.4in}|}{ NAME, NAMEJC, K*, KJC, TIME[Myr], M[M*], SEMI[R*], DM, DMA }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ JC: Companion star index}\\
+\multicolumn{6}{|p{5.4in}|}{ 
+DMX(JC): Mass loss from stellar wind of companion star }\\
+\multicolumn{6}{|p{5.4in}|}{ DMA: Accreted mass from companion star }\\\hline\hline
+
+   rocdeg  & 22  & roche.f    & $\#34>0$   & $T_{event}$    & Roche overflow binary involving degenerate objects \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{NAME(I1), NAME(I2), K*(I1), K*(I2), M(I1)[M*], M(I2)[M*], TIME[Myr], SEMI[R*], P[days], MD(I1)[M*/Myr], MD(I2)[M*/Myr] }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ MD: Mass loss rate }\\\hline\hline
+
+%   ibeigen    & 23  & binpop.F   & ($\#8=1$ $\|$ $\#8\geq3$) \&\& $\#42=6$ & $T_0$ & Initial binary data by using eigen-evolution \\\hline
+%\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ITER, I1, M(ICM)[M*], ECCI, ECCC, SEMII, SEMIC, P[days] }\\\hline
+%\multicolumn{6}{|p{5.4in}|}{ ITER: Iteraction times to generate parameter that satisfy the input criterions }\\
+%\multicolumn{6}{|p{5.4in}|}{ ECCI: Initial eccentricity from thermal distribution }\\
+%\multicolumn{6}{|p{5.4in}|}{ ECCC: Circularized eccentricity }\\
+%\multicolumn{6}{|p{5.4in}|}{ SEMII: Initial semi-major axis generated by ECC0 and period }\\
+%\multicolumn{6}{|p{5.4in}|}{ SEMIC: Circularized semi-major axis generated by ECCC and period }\\\hline\hline
+
+   coal  & 24  & coal.f    & $\#19\geq3$   & $T_{event}$    & Binary coalescence (Stellar type with cores and circular orbit) \\\hline
+\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{RBAR,$\langle M\rangle$,M1,TSCALE,NB0,NZERO}\\\hline \multicolumn{2}{|c|}{ H-Label-2 } & \multicolumn{4}{|p{4.4in}|}{TIME[NB], NAME(I1), NAME(I2), K*(I1), K*(I2), K*1, IQCOLL, M(I1)[M*], M(I2)[M*], M(INEW)[M*], DM[M*], RS(I1)[R*], RS(I2)[R*], RI/RC, R12[R*], ECC, P[days], RCOLL[R*], EB[NB], DP[NB], VINF[km/s]}\\\hline
+\multicolumn{6}{|p{5.4in}|}{DP: Potential energy correction to perturbers due to binary exchanged to single star}\\
+\multicolumn{6}{|p{5.4in}|}{K*1: The stellar type of the massive component}\\
+\multicolumn{6}{|p{5.4in}|}{RCOLL: Binary distance before coalescence}\\
+\multicolumn{6}{|p{5.4in}|}{VINF: Velocity at infinity for hyperbolic coalescence }\\
+\hline\hline
+
+  sediag     & 25  & unpert.f   & $\#27>0$   & $T_{event}$    & Diagnostics for the stellar evolution next look-up time of unpert KS \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ IPAIR, K*(I1), K*(I2), K*(ICM), TEVNXT[NB], STEP(I1)[NB] (No more output when NWARN$\geq1000$)}\\\hline
+\multicolumn{6}{|p{5.4in}|}{ TEVNXT: Next time to check stellar evolution }\\\hline\hline
+
+   cmbody  & 26  & cmbody.f    & $\#19\geq3$   & $T_{event}$    & Binary coalescence (Stellar type with no cores but circular orbit) \\\hline
+\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{RBAR,$\langle M\rangle$,M1,TSCALE,NB0,NZERO}\\\hline \multicolumn{2}{|c|}{ H-Label-2 } & \multicolumn{4}{|p{4.4in}|}{TIME[NB], NAME(I1), NAME(I2), K*(I1), K*(I2), IQCOLL, M(I1)[M*], M(I2)[M*], DM[M*], RS(I1)[R*], RS(I2)[R*], RI/RC, R12[R*], ECC, SEMI[R*], P[days]}\\\hline
+\hline\hline
+
+  highv     & 29  & hivel.f    &         & $T_{event}$    & Diagnostics for high-velocity particle added or removed from LISTV %\\\hline
+%\multicolumn{2}{|c|}%{ F-Label } & %\multicolumn{4}{|p{4.4in}|}{ (REMOVE) TIME[NB], I, NAME, RI(NB), VI(NB) }
+\\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ (ADD NS, terminated KS/chain) TIME[NB], NHI, I, NAME, K*, VI[NB], RI[NB], STEP[NB] }\\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ (ADD fast single) TIME[NB], NHI, NAME, IPHASE, VI[NB], RI[NB], STEP[NB] }\\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ (ADD hyperbolic two-body motion) TIME[NB], NHI, NAME(I1), NAME(I2), IPHASE, RIJ[NB] }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ NHI: high-velocity particle number}\\
+\multicolumn{6}{|p{5.4in}|}{ IPHASE: Internal status of code (check nbody6.F for details)}\\
+\hline\hline
+
+  global    & 30  & output.F   &              & $\Delta T_{out}$      & Global features of cluster and event counters \\\hline
+  \multicolumn{2}{|c|}{ H-Label-1 } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], TIME[Myr], TCR[Myr], DE, BE(3), RSCALE[PC], RTIDE[PC], RDENS[PC], RC[PC], RHOD[M*$/$PC$^3$], RHOM[M*$/$PC$^3$], MC[M*], CMAX, $\langle Cn\rangle$, Ir/R, RCM[NB], VCM[NB], AZ, EB/E, EM/E, VRMS[km/s], N, NS, NPAIRS, NUPKS, NPKS, NMERGE, MULT, $\langle NB\rangle$, NC, NESC, NSTEPI, NSTEPB, NSTEPR, NSTEPU, NSTEPT, NSTEPQ, NSTEPC, NBLOCK, NBLCKR, NNPRED, NIRRF, NBCORR, NBFLUX, NBFULL, NBVOID, NICONV, NLSMIN, NBSMIN, NBDIS, NBDIS2, NCMDER, NFAST, NBFAST, NKSTRY, NKSREG, NKSHYP, NKSPER, NKSMOD, NTTRY, NTRIP, NQUAD, NCHAIN, NMERG, NEWHI}\\\hline
+\multicolumn{6}{|p{5.4in}|}{ TCR: Crossing time }\\
+\multicolumn{6}{|p{5.4in}|}{ RDENS: density center to coordinate center distance}\\
+\multicolumn{6}{|p{5.4in}|}{ $\langle Cn\rangle$: frequency $1/STEP$ weighted averaged neighbor number}\\
+\multicolumn{6}{|p{5.4in}|}{ Ir/R: Irregular cost ($\sum NB/STEP$) over regular cost ($ N/\sum STEPR$)}\\
+\multicolumn{6}{|p{5.4in}|}{ RCM: Center mass distance to coordinate center }\\
+\multicolumn{6}{|p{5.4in}|}{ VCM: Center mass velocity}\\
+\multicolumn{6}{|p{5.4in}|}{ AZ: Angular momentum in z axis including tidal effect (Chandrasekhar equation $5.530$)}\\
+\multicolumn{6}{|p{5.4in}|}{ VRMS: root mean square velocity of cluster }\\
+\multicolumn{6}{|p{5.4in}|}{ NESC:  Escapers }\\
+\multicolumn{6}{|p{5.4in}|}{ NSTEPI: Irregular integration steps }\\
+\multicolumn{6}{|p{5.4in}|}{ NSTEPB: Irregular integration steps of binary center mass particles}\\
+\multicolumn{6}{|p{5.4in}|}{ NSTEPR: Regular integration steps }\\
+\multicolumn{6}{|p{5.4in}|}{ NSTEPU: Regularized integration steps}\\
+\multicolumn{6}{|p{5.4in}|}{ NSTEPT: Triple regularization integration steps ($\#15>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NSTEPQ: Quadruple regularization integration steps ($\#15>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NSTEPC: Chain regularization steps (\# DIFSY calls)}\\
+\multicolumn{6}{|p{5.4in}|}{ NBLOCK: Number of irregular blocks (block-step version)}\\
+\multicolumn{6}{|p{5.4in}|}{ NBLCKR: Number of regular blocks (block-step version)}\\
+\multicolumn{6}{|p{5.4in}|}{ NNPRED: Coordinate \& velocity predictions of all particles }\\
+\multicolumn{6}{|p{5.4in}|}{ NIRRF : Calculated irregular force}\\
+\multicolumn{6}{|p{5.4in}|}{ NBCORR: Force polynomial corrections}\\
+\multicolumn{6}{|p{5.4in}|}{ NBFLUX: Number of changes in neighbor lists (NBLOSS+NBGAIN)}\\
+\multicolumn{6}{|p{5.4in}|}{ NBFULL: Neighbor number overflows with standard criterion}\\
+\multicolumn{6}{|p{5.4in}|}{ NBVOID: No neighbours inside $1.26$ times the basic sphere radius}\\
+\multicolumn{6}{|p{5.4in}|}{ NICONV: Irregular step reduction (force convergence test)}\\
+\multicolumn{6}{|p{5.4in}|}{ NLSMIN: Small step neighbours selected from other neighbour lists}\\
+\multicolumn{6}{|p{5.4in}|}{ NBSMIN: Retained neighbours inside 2*RS (STEP < SMIN)}\\
+\multicolumn{6}{|p{5.4in}|}{ NBDIS : Second component of recent KS pair added as neighbour ($\#18$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NBDIS2: Second component of old KS pair added as neighbour ($\#18>1$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NCMDER: C.m. values for force derivatives of KS component}\\
+\multicolumn{6}{|p{5.4in}|}{ NFAST : Fast particles included in LISTV ($\#18>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NBFAST: Fast particles included in neighbour list ($\#18>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NKSTRY: Two-body regularization attempts}\\
+\multicolumn{6}{|p{5.4in}|}{ NKSREG: Total KS regularizations}\\
+\multicolumn{6}{|p{5.4in}|}{ NKSHYP: Hyperbolic KS regularizations}\\
+\multicolumn{6}{|p{5.4in}|}{ NKSPER: Unperturbed KS binary orbits}\\
+\multicolumn{6}{|p{5.4in}|}{ NKSMOD: Slow KS motion restarts ($\#26>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NTTRY : Search for triple, quad \& chain regularization or mergers}\\
+\multicolumn{6}{|p{5.4in}|}{ NTRIP : New three-body regularizations ($\#15>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NQUAD : New four-body regularizations ($\#15>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NCHAIN: New chain regularizations ($\#15>0\&\&\#30>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NMERG : New mergers of stable triples or quadruples ($\#15>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{ NEWHI : New hierarchical systems (counted by routine HIARCH)}\\
+\hline\hline
+
+
+  escbin     & 31  & escape.f    & $\#23=2, 4$   & $\Delta T_{ad j}$      & escaping star output for binary systems \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ Time [Myr], I1, I2, NAME(I1), NAME(I2),K*(I1), K*(I2), M1[M*], M2[M*], log10(RS(I1)[R*]), log10(RS(I2)[R*]), log10(L(I1)[L*]), log10(L(I2)[L*]), log10(Teff(I1)[K]), log10(Teff(I2)[K]), AGE1, AGE2, EPOCH1, EPOCH2}\\\hline\hline
+
+%  lagr2     & 32  & lagr2.f    & $\#7\geq5$   & $\Delta T_{out}$      & Two mass group systems Lagrangian radii (second group) \\\hline
+%\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{ see Unit 31  }\\\hline\hline
+
+  ns       & 33  & degen.f    & $\#9\geq3$   & $T_{event}$    & Neutron stars (never used)    \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ I, NAME, IFIRST, K*, TIME[Myr], VI[km/s] }\\\hline\hline
+
+  bh       & 34  & degen.f    & $\#9\geq3$   & $T_{event}$    & Black holes (never used)      \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ I, NAME, IFIRST, K*, TIME[Myr], VI[km/s] }\\\hline\hline
+
+  event    & 35  & events.f   & $\#19>0||\#27>0$ & $\Delta T_{out}$ & Stellar evolution and tidal capture event counter and energy \\\hline
+\multicolumn{2}{|c|}{ H-Lable-1 } & \multicolumn{4}{|p{4.4in}|}{TIME[Myr], NDISS,  NTIDE,  NSYNC, NCOLL, NCOAL, NDD, NCIRC, NROCHE, NRO, NCE, NHYP, NHYPC, NKICK, EBIN, EMERGE, ECOLL, EMDOT, ECDOT, EKICK, ESESC, EBESC, EMESC, DEGRAV, EBIND, MMAX, NMDOT, NRG, NHE, NRS, NNH, NWD, NSN, NBH, NBS, ZMRG, ZMHE, ZMRS, ZMNH, ZMWD, ZMSN, ZMDOT, NTYPE(1:16)}\\\hline
+\multicolumn{6}{|p{5.4in}|}{NDISS: Tidal dissipations at pericentre ($\#27>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{NTIDE: Tidal captures from hyperbolic motion ($\#27>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{NSYNC: Number of synchronous binaries ($\#27>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{NCOLL: Stellar collisions}\\
+\multicolumn{6}{|p{5.4in}|}{NCOAL: Stellar coalescence}\\
+\multicolumn{6}{|p{5.4in}|}{NDD:   Double WD/NS/BH binaries}\\
+\multicolumn{6}{|p{5.4in}|}{NCIRC: Circularized bianries ($\#27>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{NROCHE: Roche stage triggered times}\\
+\multicolumn{6}{|p{5.4in}|}{NRO:   Roche binary events}\\
+\multicolumn{6}{|p{5.4in}|}{NCE:   Common envelope binaries}\\
+\multicolumn{6}{|p{5.4in}|}{NHYP:  Hyperbolic collision}\\
+\multicolumn{6}{|p{5.4in}|}{NHYPC: Hyperbolic common envelope binaries}\\
+\multicolumn{6}{|p{5.4in}|}{NKICK: WD/NS/BH kick}\\
+\multicolumn{6}{|p{5.4in}|}{NSESC: Escaped single particles ($\#23>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{NBESC: Escaped binaries ($\#23>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{NMESC: Escaped mergers ($\#15>0 \&\& \#23>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{EKICK: KICK energy of WD/NS/BH}\\\hline
+\multicolumn{6}{|p{5.4in}|}{ESESC: Single star escaper energy}\\
+\multicolumn{6}{|p{5.4in}|}{EBESC: KS Binary star escaper energy}\\
+\multicolumn{6}{|p{5.4in}|}{EMESC: Merger escaper energy}\\
+\multicolumn{6}{|p{5.4in}|}{DEGRAV: Change of binary energy compared to initial value}\\
+\multicolumn{6}{|p{5.4in}|}{EBIND: Binding energy of cluster (E)}\\
+\multicolumn{6}{|p{5.4in}|}{MMAX:  Maximum stellar mass}\\
+\multicolumn{6}{|p{5.4in}|}{NMDOT: Stellar mass loss event}\\
+\multicolumn{6}{|p{5.4in}|}{NRG:   New red giants}\\
+\multicolumn{6}{|p{5.4in}|}{NHE:   New helium stars}\\
+\multicolumn{6}{|p{5.4in}|}{NRS:   New red supergiants}\\
+\multicolumn{6}{|p{5.4in}|}{NNH:   New naked Helium stars}\\
+\multicolumn{6}{|p{5.4in}|}{NWD:   New white dwarfs}\\
+\multicolumn{6}{|p{5.4in}|}{NSN:   New neutron stars}\\
+\multicolumn{6}{|p{5.4in}|}{NBH:   New black holes}\\
+\multicolumn{6}{|p{5.4in}|}{NBS:   New blue stragglers}\\
+\multicolumn{6}{|p{5.4in}|}{ZMRG:  New red giants mass}\\
+\multicolumn{6}{|p{5.4in}|}{ZMHE:  New helium stars mass}\\
+\multicolumn{6}{|p{5.4in}|}{ZMRS:  New red supergiants mass}\\
+\multicolumn{6}{|p{5.4in}|}{ZMNH:  New naked Helium stars mass}\\
+\multicolumn{6}{|p{5.4in}|}{ZMWD:  New white dwarfs mass}\\
+\multicolumn{6}{|p{5.4in}|}{ZMSN:  New neutron stars mass}\\
+\hline\hline
+
+status    & 36  & global \_output.F & $\#46>0$ & $\#47$ & Global parameters which combine global output and generalized Lagrangian radii \\\hline
+\multicolumn{2}{|c|}{ N-label } & \multicolumn{4}{|p{4.4in}|}{TIME[NB], TIME[Myr], Tcr[Myr], Trh[Myr], TM[M*], TSM[M*], TBM[M*], Q, Rh[pc], Rtid[pc], Rden(1:3)[pc], RHOD[M*/pc$^3$], RHOM[M*/pc$^3$], Mmax[M*], Etot[NB], Ekin[NB], Epot[NB], Ebin[NB], Etid[NB], Em[NB], Ecol[NB], Ece[NB], Ekick[NB], Eesc[NB], Ebesc[NB], Emesc[NB], N, NS, NB, NM, NP, Lagr*(R, N, M, V, Vx, Vy, Vz, Vr, Vt, Vrot, S, Sx, Sy, Sz, Sr, St, Srot, E) \& (all,single,binary), Mblagr*, Nblagr*, Mpblagr*, Npblagr*, Eblagr*, Eblagrb*, Epblagr*, Epblagrb*, Alagr*}\\
+\multicolumn{2}{|c|}{         } & \multicolumn{4}{|p{4.4in}|}{IF $\#19>=3$: MMDOT, MRG, MHE, MRS, MNH, MWD, MSN, MKW*(single, binary with one component, binary with two components) \& (K* from -1 to 15), NDISS, NTIDE, NSYNC, NCOLL, NCOAL, NCIRC, NROCHE, NRO, NCE, NHYP, NHYPC, NKICK, NMDOT, NRG, NHE, NRS, NNH, NWD, NSN, NBH, NBS, NKW*, LagrK*}\\\hline
+\multicolumn{6}{|p{5.4in}|}{TIME: Current time}\\
+\multicolumn{6}{|p{5.4in}|}{Tcr: Half-mass radius crossing time}\\
+\multicolumn{6}{|p{5.4in}|}{Trh: Half-mass radius relaxation time}\\
+\multicolumn{6}{|p{5.4in}|}{TM: Total mass}\\
+\multicolumn{6}{|p{5.4in}|}{TSM: Total single mass}\\
+\multicolumn{6}{|p{5.4in}|}{TBM: Total binary mass including mergers}\\
+\multicolumn{6}{|p{5.4in}|}{Q: Virial ratio}\\
+\multicolumn{6}{|p{5.4in}|}{Rh: Half-mass radius}\\
+\multicolumn{6}{|p{5.4in}|}{Rtid: Tidal radius}\\
+\multicolumn{6}{|p{5.4in}|}{Rden: 3-dimensional density center position in current coordinate}\\
+\multicolumn{6}{|p{5.4in}|}{RHOD: Density weighted average density $\sum \rho^2/\sum \rho$. RHO: Mass density of individual star calculated by nearest 5 neighbors (only avaiable for particles inside core radius)}\\
+\multicolumn{6}{|p{5.4in}|}{RHOM: Maximum mass density / half mass mean value}\\
+\multicolumn{6}{|p{5.4in}|}{Mmax: Maximum particle mass}\\
+\multicolumn{6}{|p{5.4in}|}{Etot: Cluster total energy without escaping energy}\\
+\multicolumn{6}{|p{5.4in}|}{Ekin: Cluster kinetic energy}\\
+\multicolumn{6}{|p{5.4in}|}{Epot: Cluster potential energy}\\
+\multicolumn{6}{|p{5.4in}|}{Ebin: Cluster Binary binding energy}\\
+\multicolumn{6}{|p{5.4in}|}{Etid: Tidal energy}\\
+\multicolumn{6}{|p{5.4in}|}{Em: Cluster mass loss energy}\\
+\multicolumn{6}{|p{5.4in}|}{Ecol: Collision energy}\\
+\multicolumn{6}{|p{5.4in}|}{Ece: Common envelope energy}\\
+\multicolumn{6}{|p{5.4in}|}{Ekick: Neutron star/black hole initial kick energy}\\
+\multicolumn{6}{|p{5.4in}|}{Eesc: escapers kinetic and potential energy (binaries/mergers using center-of-mass}\\
+\multicolumn{6}{|p{5.4in}|}{Ebesc: binary escapers binding energy}\\
+\multicolumn{6}{|p{5.4in}|}{Emesc: merger escapers binding energy}\\
+\multicolumn{6}{|p{5.4in}|}{N: Total number of particles (binary/merger resolved)}\\
+\multicolumn{6}{|p{5.4in}|}{NS: Total number of single particles}\\
+\multicolumn{6}{|p{5.4in}|}{NB: Total number of binary/merger particles (unresolved)}\\
+\multicolumn{6}{|p{5.4in}|}{NM: Total number of merger particles (unresolved)}\\
+\multicolumn{6}{|p{5.4in}|}{NP: Total number of particles (NS+NB; unresolved)}\\
+\multicolumn{6}{|p{5.4in}|}{Lagr*: Lagrangian radii and all related parameters. All, single, binary particles are calculated separately. If stellar evolution is switched on, all main type of stars are also calculated individually. Similar as lagr.7, whether the reference total mass is initial cluster mass or current mass is controlled by $\#7=2$ or $4$. But this only work for all/single/binary, not for different stellar types. The order of Lagr* is organized as hierarchical groups (from high level to low level; lowest level are neighbor data groups in output): [all, single, ***] [R, N, ***] [$0.001$, $0.01$, ***] }\\
+\multicolumn{6}{|p{5.4in}|}{~~The mass fraction list is $0.001$, $0.01$, $0.1$, $0.3$, $0.5$, $0.7$, $0.9$, $1.0$, Rc. (Rc is inside core radius)}\\
+\multicolumn{6}{|p{5.4in}|}{~~Lagrangian radii related parameters in order: (whether paremeters are calculated in shells or from the center also used the same option as lagr.7 ($\#7$))}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~R: Lagrangian radii}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~N: Number of particles (Number counts for Total Lagrangian resolved all binaries and mergers to get correct average mass; Number counts for binaris use center-of-mass)}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~M: Averaged mass }\\
+\multicolumn{6}{|p{5.4in}|}{~~~~V: Averaged velocity value}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~Vx: Averaged x component of velocity}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~Vy: Averaged y component of velocity}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~Vz: Averaged z component of velocity}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~Vr: Averaged radial velocity}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~Vt: Averaged tangential velocity}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~Vrot: Averaged rotational velocity along z axis}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~S*: mass weighted velocity dispersion with similar definitions as V*}\\
+\multicolumn{6}{|p{5.4in}|}{~~~~E: kinetic and potential energy}\\
+\multicolumn{6}{|p{5.4in}|}{Mblagr*: Binary mass within total (global) Lagrangian radii, the ratio follows Lagr* without Rc (thus one data column less)}\\
+\multicolumn{6}{|p{5.4in}|}{Nblagr*: Binary number (resolved; including mergers counted as 3) within total (global) Lagrangian radii, similar as Mblagr*}\\
+\multicolumn{6}{|p{5.4in}|}{Mpblagr*: Primordial binary (detected by NAME(I1)-NAME(I2)==1) mass within total (global) Lagrangian radii, the ratio follows Lagr* with Rc}\\
+\multicolumn{6}{|p{5.4in}|}{Npblagr*: Primordial binary number (resolved within total (global) Lagrangian radii, similar as Mpblagr*}\\
+\multicolumn{6}{|p{5.4in}|}{Eblagr*: Binary binding energy within total (global) Lagrangian radii, the ratio follows Lagr*}\\
+\multicolumn{6}{|p{5.4in}|}{Eblagrb*: Binary binding energy within binary Lagrangian radii, the ratio follows Lagr* without Rc}\\
+\multicolumn{6}{|p{5.4in}|}{Epblagr*: Primordial binary binding energy within total (global) Lagrangian radii, the ratio follows Lagr*}\\
+\multicolumn{6}{|p{5.4in}|}{Epblagrb*: Primordial binary binding energy within binary Lagrangian radii, the ratio follows Lagr* without Rc}\\
+\multicolumn{6}{|p{5.4in}|}{Alagr*: 3-dimensional angular momentum (binary unresolved) within total (global) Lagrangian radii, the ratio follows Lagr*. Notice different Lagrangian ratios are minimum groups of data (neighbor data) in output, the three component is in high level}\\
+\multicolumn{6}{|p{5.4in}|}{MMDOT: Stellar mass loss }\\
+\multicolumn{6}{|p{5.4in}|}{MRG:  Cumulative new red giants mass}\\
+\multicolumn{6}{|p{5.4in}|}{MHE:  Cumulative new helium stars mass}\\
+\multicolumn{6}{|p{5.4in}|}{MRS:  Cumulative new red supergiants mass}\\
+\multicolumn{6}{|p{5.4in}|}{MNH:  Cumulative new naked Helium stars mass}\\
+\multicolumn{6}{|p{5.4in}|}{MWD:  Cumulative new white dwarfs mass}\\
+\multicolumn{6}{|p{5.4in}|}{MSN:  Cumulative new neutron stars mass}\\
+\multicolumn{6}{|p{5.4in}|}{MKW*: Total mass of different stellar types (all types from -1 to 15). For each type, a three masses (single particle, binary with one certain stellar type component, binary with both components are the certain stellar types) are grouped together in the output data}\\
+\multicolumn{6}{|p{5.4in}|}{NDISS: Cumulative event number of tidal dissipations at pericentre ($\#27>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{NTIDE: Cumulative event number of tidal captures from hyperbolic motion ($\#27>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{NSYNC: Cumulative event number of synchronous binaries ($\#27>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{NCOLL: Cumulative event number of stellar collisions}\\
+\multicolumn{6}{|p{5.4in}|}{NCOAL: Cumulative event number of stellar coalescence}\\
+\multicolumn{6}{|p{5.4in}|}{NDD:   Cumulative event number of ouble WD/NS/BH binaries}\\
+\multicolumn{6}{|p{5.4in}|}{NCIRC: Cumulative event number of circularized bianries ($\#27>0$)}\\
+\multicolumn{6}{|p{5.4in}|}{NROCHE: Cumulative number of Roche stage triggered times}\\
+\multicolumn{6}{|p{5.4in}|}{NRO:   Cumulative event number of Roche binaries}\\
+\multicolumn{6}{|p{5.4in}|}{NCE:   Cumulative event number of common envelope binaries}\\
+\multicolumn{6}{|p{5.4in}|}{NHYP:  Cumulative event number of hyperbolic collision}\\
+\multicolumn{6}{|p{5.4in}|}{NHYPC: Cumulative event number of hyperbolic common envelope binaries}\\
+\multicolumn{6}{|p{5.4in}|}{NKICK: Cumulative event number of WD/NS/BH kick}\\
+\multicolumn{6}{|p{5.4in}|}{NMDOT: Cumulative number of stellar mass loss event}\\
+\multicolumn{6}{|p{5.4in}|}{NRG:   Cumulative number of new red giants}\\
+\multicolumn{6}{|p{5.4in}|}{NHE:   Cumulative number of new helium stars}\\
+\multicolumn{6}{|p{5.4in}|}{NRS:   Cumulative number of new red supergiants}\\
+\multicolumn{6}{|p{5.4in}|}{NNH:   Cumulative number of new naked Helium stars}\\
+\multicolumn{6}{|p{5.4in}|}{NWD:   Cumulative number of new white dwarfs}\\
+\multicolumn{6}{|p{5.4in}|}{NSN:   Cumulative number of new neutron stars}\\
+\multicolumn{6}{|p{5.4in}|}{NBH:   Cumulative number of new black holes}\\
+\multicolumn{6}{|p{5.4in}|}{NBS:   Cumulative number of new blue stragglers}\\
+\multicolumn{6}{|p{5.4in}|}{NKW*:  Total number of different stellar types, similar as MKW*}\\
+\multicolumn{6}{|p{5.4in}|}{LagrKW*: Lagrangian radii and all related parameters for main stellar types}\\
+\multicolumn{6}{|p{5.4in}|}{~~The main stellar types in order: }\\
+\multicolumn{6}{|p{5.4in}|}{~~~~1. Low mass main sequence (M < 0.7) (0)}\\ 
+\multicolumn{6}{|p{5.4in}|}{~~~~2. High mass main sequence  (1)        }\\ 
+\multicolumn{6}{|p{5.4in}|}{~~~~3. Hertzsprung gap (HG). (2)           }\\ 
+\multicolumn{6}{|p{5.4in}|}{~~~~4. Red giant. (3)                      }\\ 
+\multicolumn{6}{|p{5.4in}|}{~~~~5. Core Helium burning. (HB) (4)       }\\ 
+\multicolumn{6}{|p{5.4in}|}{~~~~6. AGB (5-6)                           }\\ 
+\multicolumn{6}{|p{5.4in}|}{~~~~7. Helium types (7-9)                  }\\ 
+\multicolumn{6}{|p{5.4in}|}{~~~~8. White dwarf (10-12)                 }\\ 
+\multicolumn{6}{|p{5.4in}|}{~~~~9. Neutron star (13)                   }\\ 
+\multicolumn{6}{|p{5.4in}|}{~~~~10.Black hole (14)                     }\\ 
+\multicolumn{6}{|p{5.4in}|}{~~~~11.Pre main sequence (-1)              }\\ 
+\hline\hline
+
+
+ sediag     & 38  & expel2.f   & $\#19\geq3$ \&\& Chain  & $T_{event}$ & Diagnostics for common envelop type change \\\hline
+\multicolumn{2}{|c|}{ N-Label } &   \multicolumn{4}{|p{4.4in}|}{ETCI, OLDK*, NEWK*} \\\hline
+\multicolumn{2}{|c|}{ N-Label } &   \multicolumn{4}{|p{4.4in}|}{ETCI, I1, NAME(I1), Tevent[Myr] }
+\\\hline
+           &     & mix.f      & $\#19\geq3$ & $T_{event}$ & Diagnostics for mixed stars 
+           \\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{MIXTYPE, K*(I1), MOLD(I1)[M*], MNEW(I1)[M*]  }\\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{MIXTYPE, K*(I2), MOLD(I2)[M*], MNEW(I2)[M*]  } \\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{MIXTYPE, K*(I3), MOLD(I3)[M*], MNEW(I3)[M*]  }
+\\\hline
+           &     & trflow.f   & $\#19\geq3$ & $T_{event}$ &  Diagnostics for iteration convergency check until Roche-lobe overflow \\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{rr, RLS(I1), RLS(I2), T, TM}\\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{RGBF(M,L), RLS, LUM, LUMS(8)}\\\hline
+\multicolumn{6}{|p{5.4in}|}{ ETCI: flag for a change in the K* of a star due to the stars interaction}\\
+\multicolumn{6}{|p{5.4in}|}{OLDK*: K* before stars interact} \\
+\multicolumn{6}{|p{5.4in}|}{NEWK*: K* after stars interact} \\
+\multicolumn{6}{|p{5.4in}|}{Tevent: stars interaction time} \\
+\multicolumn{6}{|p{5.4in}|}{MIXTYPE: \texttt{OLD} for the two status of the two stars before the mix, \texttt{NEW} for the status of the star formed from the mix}\\
+\multicolumn{6}{|p{5.4in}|}{MOLD: mass before stars interaction} \\
+\multicolumn{6}{|p{5.4in}|}{MNEW: mass after stars interaction} \\
+\multicolumn{6}{|p{5.4in}|}{I3: index for star created after interaction} \\
+\hline\hline
+
+  hbin     & 39  & adjust.F   & $\#9=1$,3  & $\Delta T_{out}$      & The hardest binary below ECLOSE \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], NAME(I1), NAME(I2), K*, NP, ECC, SEMI[NB], P[days], EB[NB], EM[NB]} \\\hline\hline
+
+ data*    & 40  & custom\_ output.F & $\#46>0$ & $\#47$ & HDF5/BINARY or ANSI output of basic data. Notice all units here are shown as astrophysical units, but it can be $N$-body units or input data units depending on the $\#12=-1 \&\& \#19=0$ and $\#22$.\\\hline
+\multicolumn{6}{|p{5.4in}|}{ If HDF5 is complied and $\#46=1$ or $3$, file names are snap.40\_[time].h5part. Snapshot output time interval is controlled by DELTAT (see input parameters chapter~\ref{ch:inputvar}). If HDF5 is switched off or ANSI output is used, the file names are single/binary/merger.40\_[time], each snapshot file only contain data of one certain time. The time interval is controlled by $\#47$ (see input parameters chapter~\ref{ch:inputvar} for details) }\\\hline
+\multicolumn{2}{|c|}{ H-Label-1 } & \multicolumn{4}{|p{4.4in}|}{Single particle:  NAME, M[M*], X(1:3)[pc], V(1:3)[km$/$s], POT[NB], RS[R*], L[L*],  Teff[K], MCORE[M*], RSCORE[R*], K*} \\\\
+\multicolumn{2}{|c|}{       } & \multicolumn{4}{|p{4.4in}|}{Binary particle:  NAME(I1), NAME(I2), NAME(ICM), M(I1)[M*], M(I2)[M*], XCM(1:3)[pc], VCM(1:3)[km/s], XREL(1:3)[AU], VREL(1:3)[km/s], POT[NB], SEMI[AU], ECC, P[days], GAMMA, RS(I1)[R*], RS(I2)[R*], L(I1)[L*], L(I2)[L*], Teff(I1)[K], Teff(I2)[K], MCORE(I1)[M*], MCORE(I2)[M*], RSCORE(I1)[R*], RSCORE(I2)[R*], K*(I1), K*(I2), K*(ICM)} \\\\
+\multicolumn{2}{|c|}{       } & \multicolumn{4}{|p{4.4in}|}{Merger particle:  NAME(I1), NAME(I2), NAME(I3), NAME(ICM), M(I1)[M*], M(I2)[M*], M(I3)[M*], XCM(1:3)[pc], VCM(1:3)[km/s], XREL0(1:3)[AU], VREL0(1:3)[km/s], XREL1(1:3)[AU], VREL1(1:3)[km/s], POT[NB], SEMI0[AU], ECC0, P0[days], SEMI1[AU], ECC1, P1[days], RS(I1)[R*], RS(I2)[R*], RS(I3)[R*], L(I1)[L*], L(I2)[L*], L(I3)[L*], Teff(I1)[K], Teff(I2)[K], Teff(I3)[K], MCORE(I1)[M*], MCORE(I2)[M*], MCORE(I3)[M*], RSCORE(I1)[R*], RSCORE(I2)[R*], RSCORE(I3)[R*], K*(I1), K*(I2), K*(I3), K*(ICM)} \\\hline
+\multicolumn{2}{|c|}{       } & \multicolumn{4}{|p{4.4in}|}{HDF5 file: For every timestep, AX(1:3),  CMASS, CRADIUS, ID, JX(1:3), KSTAR, LUM, Mass, PHI, RHO, RSTAR, TEFF, V(1:3), X(1:3)} \\\hline
+\multicolumn{6}{|p{5.4in}|}{ XCM: position of center-of-mass}\\
+\multicolumn{6}{|p{5.4in}|}{ VCM: velocity of center-of-mass}\\
+\multicolumn{6}{|p{5.4in}|}{ XREL: relative position of two components in a binary (from 1 to 2: X(I1)-X(I2))}\\
+\multicolumn{6}{|p{5.4in}|}{ VREL: relative velocity of two components in a binary (from 1 to 2: V(I1)-V(I2))}\\
+\multicolumn{6}{|p{5.4in}|}{ XREL: relative position of two components in a binary (from 1 to 2: X(I1)-X(I2))}\\
+\multicolumn{6}{|p{5.4in}|}{ VREL: relative velocity of two components in a binary (from 1 to 2: V(I1)-V(I2))}\\
+\multicolumn{6}{|p{5.4in}|}{ MCORE: Stellar core mass }\\
+\multicolumn{6}{|p{5.4in}|}{ RSCORE: Stellar core radius }\\
+\multicolumn{6}{|p{5.4in}|}{ 0/1 in mergers: 0 means inner binary, 1 means outer binary (center-of-mass with outer particles}\\
+\multicolumn{6}{|p{5.4in}|}{ I1/I2/I3 in mergers: I1/I2 are inner binary components, I3 means outer particle}\\
+\multicolumn{6}{|p{5.4in}|}{ A(1:3) : Angular momentum}\\
+\hline\hline
+
+  nbflow     & 41  & fpoly0.F   & USE\_GPU& $T_0$         & Diagnostics for neighbor list overflow from GPU regular force initialization \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ NSTEPR, NAME, NB, RNB[NB], RI[NB] }\\\hline
+           &     &util\_gpu.F & USE\_GPU& $T_{event}$    & Diagnostics for neighbor list overflow from GPU regular force calculation \\\hline
+\multicolumn{2}{|c|}{ I-Label } & \multicolumn{4}{|p{4.4in}|}{ I,NAME, NNPRE, NBNEW, RNB[NB], RI[NB], TIME[NB] }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ NBPRE: previous neighbor number }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ NBNEW: new neighbor number that cause overflow }\\\hline\hline
+
+  ibcoll     & 42  & binpop.F   & $\#8=1$,$\geq3$& $T_0$         & Diagnostics for the binary physical collision cases when initializing primordial binaries \\\hline
+\multicolumn{2}{|c|}{ I-Label } & \multicolumn{4}{|p{4.4in}|}{ I1, M(I1)[M*], M(I2)[M*], ECC, SEMI[AU], PERI[R*], RS(I1)[R*], RS(I2)[R*] }\\\hline\hline
+
+  sediag    & 43  & mdot.F     & $\#19\geq3$        & $T_{event}$   & Diagnostics of warning when stellar radius expand more than 1.5x \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ I, NAME, TIME[Myr], DT[Myr], K*0, K*N, M0[M*], MN[M*], RS0[R*], RSN[R*] }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ K*0: Previous stellar type }\\
+\multicolumn{6}{|p{5.4in}|}{ K*N: New stellar type }\\
+\multicolumn{6}{|p{5.4in}|}{ M0:  Initial stellar mass }\\
+\multicolumn{6}{|p{5.4in}|}{ MN:  Current new stellar mass }\\
+\multicolumn{6}{|p{5.4in}|}{ RS0: Previous stellar radius}\\
+\multicolumn{6}{|p{5.4in}|}{ RSN: New stellar radius }\\\hline\hline
+
+  hinc     & 44  & induce.f   & $\#27>0$  & $T_{event}$   & Information of high inclinations and TC2 $<$ $10^7$ yrs of hierarchical binary \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ ECC0, ECCMIN, ECCMAX, K*(I1), K*(I2), K*(ICM), SEMI0[NB], PERIM[NB], IN, TG[Myr], TC[Myr], TCM[Myr], TIME[Myr] }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ IN: Indicator of inclination: 1 + AIN*360/(2*pi*22.5), where AIN is inclination angle }\\
+\multicolumn{6}{|p{5.4in}|}{ TCM: Circularization timescale for smallest pericenter} \\
+\hline\hline
+
+%  mbh       & 45  & bhplot.f   & $\#24=1$  & $\Delta T_{BH}$   & Mass black hole information \\\hline
+%\multicolumn{2}{|c|}{ H-Label-1 } & \multicolumn{4}{|p{4.4in}|}{ STAT, TIME[Myr], IBH, X(1:3)[PC], V(1:3)[km/s], NB, XAVE(1:3)[AU], VAVE(1:3)[km/s], DEN[M*/PC$^3$], RIJMAX[PC], VSIGMA(1:3)[km$^2$/s$^2$]} \\\hline
+%\multicolumn{6}{|p{5.4in}|}{ Notice the XAVE, VAVE, DEN, VSIGMA is not accurate due to the neighbor criterion} \\
+%\multicolumn{6}{|p{5.4in}|}{ STAT: Status showing whether black hole is in binary system or single } \\
+%\multicolumn{6}{|p{5.4in}|}{ IBH: Index of massive black hole } \\
+%\multicolumn{6}{|p{5.4in}|}{ XAVE: Density center vector of black hole neighbors (relative to black hole velocity)} \\
+%\multicolumn{6}{|p{5.4in}|}{ VAVE: Average velocity vector of black hole neighbors (relative to black hole velocity)} \\
+%\multicolumn{6}{|p{5.4in}|}{ DEN: Local density of black hole calculated by neighbors within RNB (exclude black hole mass)} \\
+%\multicolumn{6}{|p{5.4in}|}{ RIJMAX: Maximum distance from neighbor star to black hole} \\
+%\multicolumn{6}{|p{5.4in}|}{ VSIGMA: 3-dimensional velocity dispersion of black hole neighbors (relative to black hole velocity)} \\
+%\hline\hline
+
+%mbhnb     & 46  & bhplot.f   & $\#24=1$  & $\Delta T_{BH}$   & Mass black hole neighbor information \\\hline
+%\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{ TIME[Myr], NB } \\\hline
+%\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{ NAME, M[M*], XREL(1:3)[AU], RIJ[AU], VREL(1:3)[km/s], K*} \\\hline
+%\multicolumn{6}{|p{5.4in}|}{ XREL: Position vector relative to black hole } \\
+%\multicolumn{6}{|p{5.4in}|}{ RIJ: Distance to black hole} \\
+%\multicolumn{6}{|p{5.4in}|}{ VREL: Velocity vector relative to black hole velocity } \\
+%\hline\hline
+tail*     & 50  & output.F   & $\#23 > 3$ &  $\Delta T_{out}$     & Tidal tail informations and evolution \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ NTAIL, MODEL, NK  } \\\hline
+\multicolumn{6}{|p{5.4in}|}{ Descriptions... } \\\hline\hline
+
+  itid3     & 52  & xtrnl0.F   & $\#14=3$ &  $T_0$     & Initialization of circular velocity in the plane for galaxy tidal force \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ VC[km/s], RI[KPC] } \\\hline
+\multicolumn{6}{|p{5.4in}|}{ VC: Circular velocity } \\\hline\hline
+
+  close     & 54  & ksint.f    & $\#19\geq3$  & $T_{event}$    & Close encounter for hyperbolic motion (pericenter $< 5.0 \times$ Maximun stellar radius of two stars \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{TIME[NB], NAME(I1), NAME(I2), K*(I1), K*(I2), VINF[km/s], RCAP[R*], RX[R*], PERI[R*] }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ VINF: Velocity at infinity for hyperbolic coalescence }\\
+\multicolumn{6}{|p{5.4in}|}{ RCAP: Capture distance of hyperbolic encounters (binary will form)} \\
+\multicolumn{6}{|p{5.4in}|}{ RX: Maximum stellar radius of two stars} \\\hline\hline
+
+  rpmax     & 55  & ksint.f    & $\#19\geq3$  & $T_{event}$    & Close encounter for hyperbolic motion (physical collision case) \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{TIME[NB], IPAIR, NAME(I1), NAME(I2), K*(I1), K*(I2), K*(ICM), VINF, ECC, H[NB], R12[NB], SEMI[NB], PERI[NB], M(I1)[NB], M(I2)[NB], M(ICM)[M*], RI[RC], VI[km/s], RHOD, RS(I1)[R*], RS(I2)[R*], RCAP[R*], RX/PERI, RCOLL/PERI} \\\hline
+\multicolumn{6}{|p{5.4in}|}{ RCOLL: If $\#27>2$ Relativistic collision criterion, otherelse normal collision criterion} \\
+\multicolumn{6}{|p{5.4in}|}{ RX: Maximum stellar radius of two stars} \\\hline\hline
+
+% *fort     & 60  & ellan.f    & $\#49>0$   & $\Delta T_{out}$      & Moments of Inertia ??        \\\hline
+%\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{??} \\\hline\hline
+
+ cirdiag     & 71  & spiral.f   & $\#27>0$   & $T_{event}$    & Diagnostics for skip removal of chaos binary if this is member of single/double (stable quadruple) merger. \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ NCHAOS, NAMEC, NAME(IM), NAME(I3) }\\
+\multicolumn{6}{|p{5.4in}|}{ NCHAOS:  Number of chaos binaries }\\
+\multicolumn{6}{|p{5.4in}|}{ NAMEC:  Name for chaos binaries }\\
+\hline\hline
+
+ histab     & 73  & impact.f   &  $\#15>0$   & $T_{event}$    & Diagnostics for checking Zare exchange stability criterion (exchange of outer particle with inner member of binary), but the slingshot still can happen, thus not triple system stablility criterion. \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], M(I3)/M(INCM), ECC0, ECC1, SEMI0[NB], PERIM[NB], PCR[NB], TG[Myr], SP, INA[deg], K* }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ SP: $>=1$, no exchange; $<1$, will be exchange }\\
+\hline\hline
+
+ cirdiag     & 75  & decide.f   & $\#27=2$   & $T_{event}$    & Diagnostics output for large eccentricity ($>$ 0.9) during merger decision (deny stable triple forming if circularization timescale is short). \\\hline
+ \multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ K*[I1], K*[I2], K[ICM], LIST, NAME, TIME[NB], ECC, ECC1, EMAX, TG[MYR], EDAV[1/MYR], PM}\\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ NAME, TIME[NB], ECC0, ECC1, EMIN, EMAX, ECCD[1/Myr], EDT[NB], TG[Myr], TC[Myr], EDAV[1/Myr], PERIM[RSM] }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ ECCD: Eccentricity change rate }\\
+\multicolumn{6}{|p{5.4in}|}{ EDAV: Average eccentricity change rate }\\
+\multicolumn{6}{|p{5.4in}|}{ RSM: Maximum stellar radius of two stars }\\
+\multicolumn{6}{|p{5.4in}|}{ EDT: Tidal circularization timescale for current eccentricity }\\
+\hline\hline
+
+ kscrit     & 77  & chmod.f    & $\#16>2$ \&\& CHAIN & $T_{event}$ & Diagnostics for increasing or decreasing regularization parameters in chain \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], KSMAG, GPERT, RMIN, RIJ[NB]} \\\hline
+\multicolumn{6}{|p{5.4in}|}{ KSMAG: Indicator of increasing and decreasing times  }\\
+\multicolumn{6}{|p{5.4in}|}{ GPERT: Dimensionless perturbation of chain }\\
+\multicolumn{6}{|p{5.4in}|}{ RMIN: Distance criterion for regularization (also is input parameter)} \\
+\multicolumn{6}{|p{5.4in}|}{ RIJ: Distance between chain center mass and perturber}\\ 
+\hline\hline
+
+  chstab     & 81  & chstab.f   & CHAIN   & $T_{event}$    & New hierarchical system with stability condition for bound close pair (RB $>$ semi) (formed from 4th body escape or perturber make it stable).\\\hline
+\multicolumn{2}{|c|}{ I-Label } & \multicolumn{4}{|p{4.4in}|}{ TIMEC, RI[NB], NAME(I3), M(I3)/M(INCM), ECC0, ECCMAX, ECC1, SEMI0[NB], SEMI1[NB], PCR/PERIM, INA[deg] } \\\hline
+           &     & cstab2.f   & CHAIN   & $T_{event}$    & Hierarchical stability condition (SEMI1 $>$ 0 $\Rightarrow$ ECC1 $<$ 1). \\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{ TIMEC[NB], RI[NB], NAME(I3), ECC0, ECC1, SEMI0[NB], SEMI1[NB], PCR/PERIM, INA[deg]}\\\hline
+           &     & cstab3.f   & CHAIN   & $T_{event}$    & Continued chain integration if outer orbit unstable or large pert. \\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{ TIMEC[NB], RI[NB], NAME(I3), ECC0, ECC1, SEMI0[NB], SEMI1[NB], PCR/PERIM, INA[deg]} \\\hline
+           &     & cstab4.f   & CHAIN   & $T_{event}$    & Check hierarchical stability condition for bound close pair.    \\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{ TIMEC[NB], RI[NB], NAME(I3), ECC0, ECC1, SEMI0[NB], SEMI1[NB], PCR/PERIM, INA[deg]} \\\hline
+\multicolumn{6}{|p{5.4in}|}{ TIMEC: time when chain formed }\\
+\hline\hline
+
+  bev*     & 82  & hrplot.F   & $\#12>0$   & $\Delta T_{HR}$      & KS binary stellar evolution data \\\hline
+\multicolumn{2}{|c|}{ Header-1} & \multicolumn{4}{|p{4.4in}|}{ NPAIRS, TIME[Myr] }\\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], I1, I2, NAME(I1), NAME(I2), K*(I1), K*(I2), K*(ICM), RI[RC], ECC, log10(P[days]), log10(SEMI[R*]), M(I1)[M*], M(I2)[M*], log10(L(I1)[L*]), Log10(L(I2)[L*]), Log10(RS(I1)[R*]), Log10(RS(I2)[R*]), Log10(Teff(I1)[K]), Log10(Teff(I2)[K]), AGE1, AGE2, EPOCH(I1), EPOCH(I2) [all Myr] }\\\hline\hline
+
+  sev*     & 83  & hrplot.F   & \#12>0    &             & Single star stellar evolution data  \\\hline
+\multicolumn{2}{|c|}{ Header-1} & \multicolumn{4}{|p{4.4in}|}{ NS, TIME[Myr]} \\\hline
+\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], I, NAME, K*, RI[RC], M[M*], log10(L[L*]), log10(RS[R*]), log10(Teff[K]), AGE, EPOCH [both Myr]} \\\hline\hline
+
+  merger    & 84  & bindat.f   & $\#8\geq2$   & $\Delta T_{out}$    & Extra mergers information (main merger output is in hidat.87\_*) \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], NAME[I1], NAME[I3], K*[I1], K*[I3], K*[IM], ECC0, ECC1, PERI(I3)/PCR, PERI(INCM)[RSM], P0[days], P1[days], SEMI1[NB] }\\\hline\hline
+
+ roche    & 85  & roche.f    & $\#34>0$   & $T_{event}$    & Roche overflow stage data    \\\hline
+\multicolumn{2}{|c|}{ H-Label } & \multicolumn{4}{|p{4.4in}|}{ NAME(I1), NAME(I2), K*(I1), K*(I2), TIME[Myr], AGE(I1), AGE(I2), M0(I1), M0(I2), M(I1), M(I2), Z, ECC, P[days], JSPIN(I1), JSPIN(I2), STAT} \\\hline
+\multicolumn{6}{|p{5.4in}|}{ AGE: Stellar age} \\
+\multicolumn{6}{|p{5.4in}|}{ JSPIN: Angular momentum of star} \\
+\multicolumn{6}{|p{5.4in}|}{ STAT: Type of binary} \\
+\multicolumn{6}{|p{5.4in}|}{ Z: Metallicity} \\
+\multicolumn{6}{|p{5.4in}|}{ *M0: Stellar mass before mass transfer? } \\\hline\hline
+
+cmbody    & 86  & cmbody.f    & $\#19\geq 3$   & $T_{event}$    & Common envelop treatment if in CHAIN   \\\hline
+\multicolumn{2}{|c|}{ H-Label } & \multicolumn{4}{|p{4.4in}|}{T[Myr], NAME(I1), NAME(I2), K*(I1),
+K*(I2), ZM(I2), ZM(I2), R(I1), R(I2), DMINC} \\\hline
+\multicolumn{6}{|p{5.4in}|}{Descriptions...} \\\hline\hline
+
+ hidat*    & 87  & hidat.f    & $\#18>3$   & $\Delta T_{out}$      & Hierarchical data of mergers (stable triples, quadruples) \\\hline
+\multicolumn{2}{|c|}{ Header-1} & \multicolumn{4}{|p{4.4in}|}{ NPAIRS, NRUN, N, NC, NMERGE, MULT, NEWHI, TIME[NB] } \\\hline
+\multicolumn{2}{|c|}{ H-Label } & \multicolumn{4}{|p{4.4in}|}{ NAME(I1), NAME(I2), NAME(I3), K*(I1), K*(I2), K*(I3), M(I1)[M*], M(I2)[M*], M(I3)[M*], RI[NB], ECCMAX, ECC0, ECC1, P0[days], P1[days] } \\\hline
+\multicolumn{6}{|p{5.4in}|}{ MULT: Number of deeper mergers (4 bodies ((B-S)-S) or 5 bodies ((B-S)-S)-S) } \\
+\multicolumn{6}{|p{5.4in}|}{ NEWHI: Counter of new hierarchical systems in chain} \\
+\hline\hline
+
+  dtmin    & 88  & levels.f   & $--$   & $\Delta T_{out}$    & Timesteps description of regular, irregular, adjust  \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ STEPTYPE Tcpu,I,IMAXI}\\ \hline
+\multicolumn{6}{|p{5.4in}|}{STEPTYPE: type of force integrated, Tcpu: timestep in seconds} \\
+\hline\hline
+
+ quastab     & 89  & impact.f   & $\#15\geq3$  & $T_{event}$    & Diagnostics for stability criterion of two binaries in quadruple  \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], NAME(I1), NAME(J1), LQ, RI[NB], ECC1, EB[NB], EB2[NB], EB1[NB], P1[days], PERIM[NB], PCR[NB]} \\\hline
+\multicolumn{6}{|p{5.4in}|}{ J1: Index of first member in second binary } \\
+\multicolumn{6}{|p{5.4in}|}{ LQ: orbit counter for diagnostics output } \\
+\multicolumn{6}{|p{5.4in}|}{ ECC1: Outer orbit eccentricity in B-B quadruple } \\
+\multicolumn{6}{|p{5.4in}|}{ EB: Quadruple binding energy } \\
+\multicolumn{6}{|p{5.4in}|}{ EB1: First binary binding energy } \\
+\multicolumn{6}{|p{5.4in}|}{ EB2: Second binary binding energy } \\
+\multicolumn{6}{|p{5.4in}|}{ P1: Outer orbit period} \\
+\hline\hline
+
+   bs      & 91  & mix.f      & $\#19\geq3$  & $T_{event}$    & Blue straggler information   \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], NAME(I1), NAME(I2), M(INEW), ECC, P[days], P(I1)[days], P(I2)[days]}  \\
+\hline\hline
+
+  wdcirc    & 95  & spiral.f   & $\#27>0$     & $T_{event}$    & Diagnostics for recent WD as the second component of binary system involving tidal circularization\\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{TIME[NB], NAME(I2), NAME(I1), K*(I1), ROT(I1)[NB], ROT(I2)[NB], $\langle$motion$\rangle$, SPIN(I2)[NB] }\\\hline
+\multicolumn{6}{|p{5.4in}|}{ $\langle$motion$\rangle$ : sqrt( M(ICM) / (RSM * SEMI)**3) [NB] } \\
+\multicolumn{6}{|p{5.4in}|}{ *SPIN: spin of star ?} \\\hline
+\hline\hline
+
+  cirdiag    & 96  & hut.f      & $\#27>0$     & $T_{event}$    & Diagnostics for reducing steps of integration equations for eccentricity and angular velocites of stars (Equation 15.22 in Sverre, 2003 book) \\\hline
+\multicolumn{2}{|c|}{ F-Label } & \multicolumn{4}{|p{4.4in}|}{NSTEPS, IT, U, UD, DTAU (All in NB unit)} \\\hline
+\multicolumn{6}{|p{5.4in}|}{ NSTEPS: Step number for integration } \\
+\multicolumn{6}{|p{5.4in}|}{ IT: Iteration times for reduction} \\
+\multicolumn{6}{|p{5.4in}|}{ U: KS vector U} \\
+\multicolumn{6}{|p{5.4in}|}{ UD: KS vector UDOT} \\
+\multicolumn{6}{|p{5.4in}|}{ DTAU: KS integration time step } \\\hline
+\end{longtable}
+
+%%\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "nbody6xx"
+%%% End:

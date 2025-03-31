@@ -1,0 +1,104 @@
+
+\section{Introduction}
+
+
+Gravity is an ever--present force in the Universe
+and is involved into the dynamics of all kinds of bodies,
+from the tiny atom to the clusters of galaxies.
+At small spatial scales, its influence is covered by other
+strong forces (e.g. magnetic, pressure, radiation induced),
+while on the very large scale it becomes the most dominant
+power.
+In astrophysics, it governs the dynamical evolution of
+many self--gravitating systems.
+Here, we concentrate on such systems that are dominated
+by mutual gravitation between particles.
+
+The numerical star-by-star simulation of a simple cluster
+containing some more than hundred thousand members still
+places heavy demands on the available hard- and software.
+A balance has to be found between two constraints:
+On one hand the \emph{realism}, i.e.\ the input of
+profound physics, inclusion of all astrophysical effects
+as well as the maintenance of the accuracy of calculations;
+and on the other hand, the \emph{efficiency}, i.e.\
+the limitations given by the computational possibilities
+and suitable codes to be finished in a reasonable time.
+Many different kinds of approaches have been undertaken
+to suffice both:
+\begin{itemize}
+\item codes based on the direct force integration
+      \cite{a_85}, \cite{a_99b}, \cite{a_03}, see also:\\
+      {\tt http://www.sverre.com/} ,
+\item statistical models, which themselves divide into
+      several subgroups
+      (Fokker--Planck approximation by \cite{c_80};
+      Monte--Carlo method by \cite{h_71};
+      Gas models by \cite{s_94}),
+\item usage of high-performance parallel computers
+      \cite{s_99}, \cite{dhm_03},
+\item or the construction of special hardware devoted
+      for these purposes (GRAPE \cite{mtes_97},
+      see also: $\;$ {\tt http://www.astrogrape.org/}
+      $\;$ and $\;$ \\
+      {\tt http://www.cs.rit.edu/$^{\sim}$grapecluster/} .
+\end{itemize}
+
+%All the aspects have their advantages as well as disadvantages.
+The code NBODY6++GPU described in this manual is designed for
+an accurate integration of many bodies
+(e.g. in a star cluster, planetary system, galactic nucleus)
+based on the direct integration of the Newtonian equations
+of motion.
+It is optimal for collisional systems, where long times of
+integration and high accuracy or both are required, in order
+to follow with high precision the secular evolution of the objects.
+
+NBODY6++GPU is a descendant of the family of NBODY codes initiated
+by Sverre Aarseth \cite{a_99a}, which has been extended to be
+suitable for parallel computers \cite{s_99}, and further on to NBODY6++GPU by Long Wang and Rainer Spurzem \cite{Wang2015, Wang2016,Kamlah2022}. There is also a single node GPU version NBODY6GPU \cite{NA2012}. Stellar Evolution of single stars and binaries is based on Jarrod Hurley's procedures \cite{Hurley2000, Hurley2002, Hurley2005} with many recent and not so recent updates, which are summarized in \cite{Banerjee2020, Kamlah2022}.
+
+The basic features of the code increasing the efficiency may
+be considered under four separate headings:
+fourth order prediction--correction method (Hermite scheme),
+individual and block time--steps,
+regularization of close encounters and few-body subsystems,
+and a neighbour scheme (Ahmad--Cohen scheme).
+We briefly describe these ideas in this booklet, while a
+detailed description can be found in \cite{a_93} as well as
+his book \cite{a_03}.
+
+While NBODY6++GPU is not that different from the original NBODY6 to justify a completely new name, the user should, however, be
+aware that in order to make a parallelization of regular and
+irregular force computations possible at all,
+some significant changes in the order of operations became 
+necessary.
+As a consequence, trajectories of the same initial system,
+simulated by NBODY6 and NBODY6++ will diverge from each other,
+due to the inherent exponential instability and deterministic
+chaos in $N$-body systems.
+Still one should always expect that the \emph{global}
+properties are well behaved in both cases (e.g. energy
+conservation).
+While much effort is taken to keep NBODY6++GPU as
+close as possible to to the original NBODY6 this is never 100\% the case, and the
+interested should always contact Sverre Aarseth or Rainer
+Spurzem if in doubt about these matters.
+
+This manual should serve as a practical starter kit for
+new students working with NBODY6++GPU.
+It is not meant as a complete reference or scientific paper;
+for that see the references and in particular the excellent
+compendium of Aarseth's book on Gravitational
+$N$-Body Simulations \cite{a_03}.
+
+\section*{Acknowledgements}
+
+The authors of this manual would like to express their sincere
+gratitude to Sverre Aarseth, Seppo Mikkola, Jarrod Hurley, Peter Berczik, Long Wang, Albrecht Kamlah, and Manuel Arca Sedda for their continuous support and work on the code, some of them over the decades.
+Also, many students and postdocs in Heidelberg, Beijing, and elsewhere
+have contributed towards development, debugging and improving
+the software for the benefit of the community.
+%Particular thanks are due to Patrick Glaschke and Chingis Omarov.
+The original booklet version was written at the Astronomisches Rechen--Institut Heidelberg under the supervision of Rainer Spurzem; now it is supported by team members of  the Silk Road Project http://silkroad.bao.ac.cn in Europe and Asia.
+

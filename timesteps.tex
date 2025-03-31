@@ -1,0 +1,167 @@
+
+\section{Individual and block time steps}
+\label{ch:timesteps}
+
+Stellar systems are characterized by a huge dynamical range in
+radial and temporal scales.
+The time scale varies e.g.\ in a star cluster from orbital periods
+of binaries of some days up to the relaxation of a few hundred
+million years, or even billions of years.
+Even if we put for a moment the very close binaries aside,
+which are treated differently (by regularization methods),
+there typically is a large dynamic range in the average local
+stellar density from its centre to the very outskirts, where it
+dissolves into the galactic tidal field.
+In a classical picture, the two closest bodies would determine
+the time--step of force calculation for the whole rest of the
+system.
+However, for bodies in regions where the changes of the force are
+relatively small, a permanent re--computing of the terms appears
+time consuming.
+So, in order to economize the calculation, these objects shall
+be allowed to move a longer distance before a recomputation
+becomes necessary.
+In between there is always the possibility to acquire particle
+positions and velocities via a Taylor series prediction,
+as described in Chapter~\ref{ch:hermite}.
+This is the idea of a vital method for assigning different
+time--steps, $\Delta t = t_1 - t_0$, between the force
+computations, the so--called ``individual time--step scheme''
+\cite{a_63}, which was later advanced to the hierarchical
+block steps.
+
+
+%%%%%%%%%%%%   Figure for block time step scheme   %%%%%%%%%%%%
+\begin{figure}[ht]
+%
+\centering
+\framebox{
+\unitlength1cm
+\begin{picture}(10,6.2)
+   % lower horizontal line (time step)
+   \thinlines
+      \put(0.5,1){\line(1,0){9.0}}                 % time axis
+      \multiput(0.5,1.125)(0.5,0){18}{\line(0,-1){0.25}} % tickmarks
+      \put(0.43,0.5){0}                             % ticknames
+      \put(0.93,0.5){1}
+      \put(1.43,0.5){2}
+      \put(2.43,0.5){4}
+      \put(4.43,0.5){8}
+      \put(5.8,0.5){time steps}
+      \put(8.3,0.5){16}
+   % time steps of particles
+   \thicklines
+      \multiput(0.5,2.2)(0.5,0){12}{\vector(1,0){0.5}}
+          \multiput(6.5,2.2)(1.0,0){2}{\vector(1,0){1.0}}
+      \multiput(0.5,3.2)(1.0,0){4}{\vector(1,0){1.0}}
+          \multiput(4.5,3.2)(2.0,0){2}{\vector(1,0){2.0}}
+      \multiput(0.5,4.2)(2.0,0){2}{\vector(1,0){2.0}}
+          \multiput(4.5,4.2)(1.0,0){2}{\vector(1,0){1.0}}
+          \multiput(6.5,4.2)(0.5,0){4}{\vector(1,0){0.5}}
+      \multiput(0.5,5.2)(4.0,0){2}{\vector(1,0){4.0}}
+   % vertical dotted lines
+      \put(0.5,1.8){\line(0,1){3.8}}
+      \dottedline{0.2}(1.0,1)(1.0,2.1)
+      \dottedline{0.2}(1.5,1)(1.5,3.1)
+      \dottedline{0.2}(2.0,1)(2.0,2.1)
+      \dottedline{0.2}(2.5,1)(2.5,4.1)
+      \dottedline{0.2}(3.0,1)(3.0,2.1)
+      \dottedline{0.2}(3.5,1)(3.5,3.1)
+      \dottedline{0.2}(4.0,1)(4.0,2.1)
+      \dottedline{0.2}(4.5,1)(4.5,5.1)
+      \dottedline{0.2}(5.0,1)(5.0,2.1)
+      \dottedline{0.2}(5.5,1)(5.5,2.1)
+          \dottedline{0.2}(5.5,3.7)(5.5,4.6)
+          \dottedline{0.2}(7.0,3.7)(7.0,4.6)
+          \dottedline{0.2}(7.5,3.7)(7.5,4.6)
+          \dottedline{0.2}(8.0,3.7)(8.0,4.6)
+      \dottedline{0.2}(6.0,1)(6.0,2.1)
+      \dottedline{0.2}(6.5,1)(6.5,4.1)
+%      \dottedline{0.2}(7.0,1)(7.0,2.1)
+      \dottedline{0.2}(7.5,1)(7.5,2.1)
+%      \dottedline{0.2}(8.0,1)(8.0,2.1)
+      \dottedline{0.2}(8.5,1)(8.5,5.1)
+   % vertical ticknames
+      \put(0.0,2.1){$i$}
+      \put(0.0,3.1){$k$}
+      \put(0.0,4.1){$l$}
+      \put(0.0,5.1){$m$}
+      \put(0.0,5.8){particles}
+%      \put(0.0,5.7){blocks}
+\end{picture}
+}%
+  \vspace{1ex}
+  \caption{Block time steps exemplary for four
+           particles.}
+  \label{pic:its}
+\end{figure}
+
+
+Each particle is assigned its own $\Delta t_i$ which is
+first illustrated for the case of ``block time--steps''
+in Figure \ref{pic:its}.
+The particle named $i$ has the smallest time step at the
+beginning, so its phase space coordinates are determined at
+each time step.
+The time step of $k$ is twice as large as $i$'s,
+and its coordinates are just extrapolated (``predicted'')
+at the odd time steps, while a full force calculation is
+due at the dotted times.
+The step width may be altered or not after the end of the
+integration cycle for the special particle, as demonstrated
+for $k$ and $l$ beyond the label ``8''.
+The time steps have to stay commensurable with both,
+each other as well as the total time, such that a
+hierarchy is guaranteed.
+This is the block step scheme.
+
+As a first estimate, the rate of change of the acceleration
+seems to be a reasonable quantity for the choice of the time
+step:
+$\Delta t_i \propto \sqrt{ \mathbf a_i / \dot{\mathbf a}_i }$.
+But it turns out that for special situations in a many-body
+system, it provides some undesired numerical errors.
+After some experimentation, the following formula was adopted
+\cite{a_85}:
+%
+\begin{eqnarray}
+\Delta t_i = \sqrt{
+           \eta \frac{|\mathbf a_{1,i}||\mathbf a_{1,i}^{(2)}| +
+                      |\dot{\mathbf a}_{1,i}|^2 }
+                     {|\dot{\mathbf a}_{1,i}||\mathbf a_{1,i}^{(3)}| +
+                      |\mathbf a_{1,i}^{(2)}|^2 }
+                  } ,    \label{eq:timestep}
+\end{eqnarray}
+%
+where $\eta$ is a dimensionless accuracy parameter which
+controls the error.
+In most applications it is taken to be $\eta \approx$ 0.01
+to 0.02, see also next chapter.
+
+For the block--time steps, the synchronization is made
+by taking the next--lowest integer of $\Delta t_i$;
+the time steps are quantized to powers of 2 \cite{m_91a}.
+Then, there will be a group (block) of several particles
+which are due to movement at each time step.
+If one keeps the exact $\Delta t_i$'s evaluated from
+(\ref{eq:timestep}) for each particle, the commensurability
+is destroyed, and we arrive at the so--called ``individual
+time steps'';
+in this case, there exists one sole particle being due.
+The latter concept is realized in the earlier codes
+NBODY1, NBODY3, NBODY5, where a neighbour scheme is renounced.
+NBODY4, NBODY6, and NBODY6++ use a block step scheme.
+
+% In the running code, the time--steps are adjusted to their
+% appropriate values fairly quick. % Makino & Aarseth (1992)
+% Although successive steps normally change smoothly,
+% it is prudent to restrict the growth by a stability factor
+% of 1.2. % Aarseth (1985)
+
+Subsystems like star binaries, triples or a similar subgroups
+(they are termed KS pairs, chains, hierarchies) enter the
+time--step scheme with their respective centre's of masses only.
+Their internal motion is treated in a different way by a
+regularized integration (Chapter~\ref{ch:regularization}).
+
+

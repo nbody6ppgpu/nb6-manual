@@ -1,0 +1,194 @@
+
+
+\section{KS--Regularization} \label{ch:regularization}
+
+The fourth main feature of the codes since NBODY3 is a special
+treatment of close binaries.
+A close encounter is characterised by an impact parameter
+that is smaller than the parameter for a 90 degree deflection
+%
+\begin{equation}
+p_{90} = 2 G(m_1 + m_2)/v_\infty^2   \label{eq:p90}
+\end{equation}
+%
+where $G$, $m_1$, $m_2$, $v_\infty$ are the gravitational constant,
+the masses of the two particles and their relative velocity
+at infinity.
+%In $N$--body units (Ch.~\ref{ch:nbtime}), it is
+%$p_{90} \propto 1/N $ for a system in virial equilibrium
+%(this is why these units are more important in small--$N$ systems).
+%However, no matter how large $N$ is,
+In the cluster centre, it is very likely that two (or even more)
+stars come very close together in a hyperbolic encounter.
+%and their relative distance becomes smaller than $p_{90}$.
+%Energetic binaries may form via three-body encounters.
+%, if there are not already primordial binaries.
+%
+As the relative distance of the two bodies becomes small ($R \rightarrow 0$),
+their timesteps are reduced to prohibitively small values, and
+truncation errors grow due to the singularity in the gravitational
+potential, eqs.~(\ref{eq:accel0}) and (\ref{eq:accel1}).
+In the NBODY code, the parameter RMIN is used to define a close
+encounter, and it is kept to the value of equation \ref{eq:p90}
+(if KZ(16) > 0 is chosen in the control parameters).
+%%%/* But the user can specify it as an input parameter freely (if KZ(16)=0). */
+%It is a good idea to keep it close to $p_{90}$, but depending on the
+%astrophysical system simulated one may want to deviate even strongly 
+%from this.
+The corresponding time step DTMIN can be estimated from 
+%
+\begin{equation}
+dt_{\rm min} = \kappa \Bigl[{\eta \over 0.03}\Bigr]
+       \Bigl({r_{\rm min}^3 \over \langle m \rangle }\Bigr)^{1/2}
+          \label{eq:dtmin}
+\end{equation}
+%
+where $\kappa$ is a free numerical factor,
+$\eta$ the general time step factor,
+and $\langle m \rangle$ the average stellar mass \cite{a_85}.
+%The code uses DTMIN as an input parameter, so the user can override
+%the value of equation \ref{eq:dtmin} again via KZ(16)=0.
+If two particles are getting closer to each other than RMIN, and
+their time steps getting smaller than DTMIN, then they are candidates
+for ``regularization''.
+
+Regularization is an elegant trick in order to deal with such particles
+which are as close as the diamond in the Figure \ref{pic:neighbour}.
+The idea is to take both stars out of the main integration cycle,
+replace them by their centre of mass (c.m.) and advance the
+usual integration with this composite particle instead of
+resolving the two components.
+The two members of the regularized pair (henceforth KS pair)
+will be relocated to the beginning of all vectors containing
+particle data, while at the end one additional c.m.\ particle is
+created (see below).
+One of the purposes of the code variable NAME(I) is to identify
+particles after such a reshuffling of data.
+
+To be actually regularized, the two particles have to fulfil two
+more sufficient criteria: that they are approaching each other,
+and that their mutual force is dominant.
+In the equations in routine {\tt search.f}, these sufficient criteria
+are defined as
+%
+\begin{eqnarray}
+& {\mathbf R}\cdot {\mathbf V} > 0.1 \sqrt{(G(m_1+m_2)R} \nonumber\\
+& \gamma := {\vert {\mathbf a}_{\rm pert}\vert \cdot R^2 \over G(m_1+m_2) } < 0.25 \nonumber
+%\label{eq:suff}
+\end{eqnarray}
+%
+Here, ${\mathbf a}_{\rm pert}$ is the vectorial differential force
+exerted by other perturbing particles onto the two candidates,
+$R$, ${\mathbf R}$, ${\mathbf V}$ are scalar and vectorial distance
+and relative velocity vector between the two candidate, respectively.
+The factor 0.1 in the upper equation allows nearly circular
+orbits to be regularized;
+$\gamma < 0.25$ demands that the relative strength of the perturbing
+forces to the pairwise force is one quarter of the maximum.
+These conditions describe quantitatively that a two-body subsystem
+is dynamically separated from the rest of the system, but not
+unperturbed.
+
+The internal motion of a KS pair will be determined by switching
+to a different (regularized) coordinate system. % Aarseth (1993)
+%The transformation employed is the Kustaanheimo--Stiefel
+%transformation \cite{ks_65}.
+This transformation can be traced back to the square in quaternion
+space, where --- by sacrificing some commutativity rules --- it is
+guaranteed that the real-space motion does not leave the
+three-dimensional Cartesian space.
+It involves a set of four regular spatial coordinates and a
+fictitious time $s(t)$, obtained in its simplest variant by the
+transformation $dt = R ds$. % Aarseth (1985)
+Any unperturbed two--body orbit in real space is mapped onto
+a harmonic oscillator in KS--space with double the frequency.
+Since the harmonic potential is regular, numerical integration with
+high accuracy can proceed with much better efficiency, and there
+is no danger of truncation errors for arbitrarily small separations.
+The internal time--step of such a KS--regularized pair is independent
+of the eccentricity and, depending on the parameter ETAU, of the
+order of some 50--100 steps per orbit. 
+% Aarseth (1993), p14, advantages
+%
+The method of regularization goes back to \cite{ks_65} and makes an
+accurate calculation of a perturbed two--body motion possible.
+A modern theoretical approach to this subject can be found in
+\cite{ns_92};
+the Hamiltonian formalism of the underlying transformations is
+nicely explained in \cite{m_97}.
+
+While regularization can be used for any analytical two--body
+solution across a mathematical collision, it is practically applied
+to perturbed pairs only.
+Once the perturbation $\gamma$ falls below a critical value
+(input parameter GMIN $\approx 10^{-6}$),
+a KS--pair is considered unperturbed, and the analytical solution for
+the Keplerian orbit is used instead of doing numerical integration.
+A little bit misleading is that such unperturbed KS--pairs are
+denoted in the code as ''mergers'', e.g. in the number or merges (NM)
+and the energy of the mergers (EMERGE).
+Merged pairs can be resolved at any time if the perturbation changes.
+The two--body KS regularization occurs in the code either for
+short-lived hyperbolic encounters or for persistent binaries. 
+
+In the code, the KS--pair appears as a new particle at the postion
+of the centre of mass.
+The variable NTOT, that contains the total number of particles $N$
+plus the c.m.'s, is increased by 1.
+When the pair is disrupted, NTOT is decreased again.
+The maximum number of possible KS--pairs is saved in the variable
+KMAX, which sets a threshold for the extension of the vector NTOT
+(see Chapter~\ref{ch:thresholds}).\\
+
+Close encounters between single particles and binary stars are
+also a central feature of cluster dynamics.
+Such temporary triple systems often reveal irregular motions, 
+ranging from just a perturbed encounter to a very complex interaction,
+in which disruption of binaries, exchange of components and ejection
+of one star may occur.
+Although not analytically solvable, the general three--body problem
+has received much attention.
+So, the KS--regularization was expanded to the isolated 3-- and 4--body
+problem, and later on to the perturbed 3--, 4--, and finally to the
+$N$--body problem.
+The routines are called
+%
+\begin{itemize}
+\item {\tt triple.f}$\:$ (unperturbed 3-body subsystems, \cite{az_74}),
+\item {\tt quad.f}$\:$  (unperturbed 4-body subsystems), and
+\item {\tt chain.f}$\:$ with different stages of implementation
+      (slow-down, Stumpff functions, see for consecutive references
+      Mikkola \& Aarseth 1990, 1993, 1996, 1998, and \cite{m_97}).
+\end{itemize}
+%
+While occurrences of ``triple'' and ``quad'' will be rare in a
+simulation, the chain regularization is invoked if a KS--pair
+has a  close encounter with another single star or another pair.
+Especially, if systems start with a large number of primordial
+binaries, such encounters may lead to stable (or quasi-stable)
+hierarchical triples, quadruples, and higher multiples.
+They have to be treated by using special stability criteria.
+Some of them are actually already implemented, but there is ongoing
+research and development in the field.
+%in particular (as relevant for our codes) by Rosemary Mardling and Sverre Aarseth.
+
+A typical way to treat all such special higher subsystems is to define
+their c.m.\ to be a pseudo-particle, i.e.\ a particle with a
+known sub-structure (very much like nodes in a TREE code).
+The members of the pseudo-particles will be deactivated by setting
+their mass to zero (ghost particles).
+At present there can only exist one chain at a time in the code,
+while merged KS binaries, and hierarchical subsystems can be more
+frequent.
+Details of these procedures are beyond the scope of this introductory
+manual.
+
+Every subsystem --- KS pair, chain or hierarchical subsystem ---
+is perturbed.
+Perturbers are typically those objects that get closer to the object
+than $R_{\rm sep} = R/\gamma_{\rm min}^{1/3}$, where $R$ is the
+typical size of the subsystem;
+for perturbers, the components of the subsystem are resolved in their
+own force computation as well (routines {\tt cmfreg.f}, {\tt cmfirr.f}).
+
+

@@ -1,0 +1,286 @@
+
+\section{The Ahmad--Cohen scheme}
+
+
+The computation of the full force for each particle
+in the system makes simulations very time--consuming
+for large memberships.
+Therefore, it is desirable to construct a method in
+order to speed up the calculations while retaining
+the collisional approach.
+One way to achieve this is to employ a ``neighbour scheme'',
+suggested by \cite{ac_73}.
+
+
+The basic idea is to split the force polynomial (\ref{eq:accp0})
+on a given particle $i$ into two parts, an irregular and a
+regular component:
+%
+\begin{eqnarray}
+\mathbf a_i = \mathbf a_{i,{\rm irr}} + \mathbf a_{i,{\rm reg}} .
+\end{eqnarray}
+%
+The irregular acceleration $\mathbf a_{i,{\rm irr}}$ results
+from particles in a certain neighbourhood of $i$
+(in the code, FI and FIDOT are the irregular force and its
+time derivative at the last irregular step;
+internally some routines use FIRR and FD as a local variable).
+They give rise to a stronger fluctuating gravitational force,
+so it is determined more frequently than the regular one
+of the more distant particles that do not change their
+relative distance to $i$ so quickly
+(in the code, FR and FRDOT are the regular force and its time
+derivative at the last regular step; some routines use
+as a local variable FREG and FDR).
+We can replace the full summation in eq.~(\ref{eq:accel0})
+by a sum over the $N_{\rm nb}$ nearest particles for
+$\mathbf a_{i,{\rm irr}}$
+and add a distant contribution from all the others.
+This contribution is updated using another Taylor series
+up to the order FRDOT, the time derivative of FR at the
+last regular force computation%
+%
+\footnote{Note, that the code also keeps the variables F and FDOT,
+which contain one half (!) of the \emph{total} force,
+and one sixth (!) of the \emph{total} time derivative of the force;
+this just a handy assignment for the frequent predictions of
+equation \ref{eq:predr}. }.
+
+Whether a particle is a neighbour or not is determined
+by its distance;
+all members inside a specified sphere (``neighbour sphere''
+with radius $r_{\rm s}$) are held in a list,
+which is modified at the end of each ``regular time--step''
+when a total force summation is carried out.
+In addition, approaching particles within a surrounding
+shell satisfying $\mathbf R \cdot \mathbf V < 0$ are
+included.
+This ``buffer zone'' serves to identify fast approaching
+particles before they penetrate too far inside the
+neighbour sphere.
+The neighbour criterion should be improved according to relative
+forces rather than distances, in particular, if there are very
+strong mass differences between particles (black holes!)
+--- such kind of work is under progress.
+
+
+%%%%%%%%%%%%   Figure a    %%%%%%%%%%%%
+\noindent
+\begin{figure}
+\centering
+\framebox{
+\unitlength0.75cm
+\begin{picture}(10,10)
+    % star + regularized neighbour + inner circle
+    \put(4.9,4.0){$\ast$}
+    \put(5.0,4.2){$\diamond$}
+    \put(5.0,4.1){\circle{0.6}}
+    % neighbour stars + neighbour sphere
+    \put(2.3,4.2){$\bullet$}
+    \put(4.5,5.3){$\bullet$}
+    \put(5.1,6.3){$\bullet$}
+    \put(5.8,4.4){$\bullet$}
+    \put(6.1,2.2){$\bullet$}
+    \put(6.7,2.9){$\bullet$}
+    \put(7.6,4.6){$\bullet$}
+    \put(7.7,3.6){$\bullet$}
+    \put(5.0,4.1){\circle{5.8}}
+    % radius of neighbour sphere
+    \thinlines
+      \put(5.0,4.1){\vector(-1,-2){1.3}}
+      \put(4.5,2.5){$r_{\rm s}$}
+    % outer stars remaining
+    \put(1.7,3.3){$\circ$}
+    \put(0.7,5.0){$\circ$}
+    \put(0.0,5.3){$\circ$}
+    \put(1.5,5.3){$\circ$}
+    \put(1.7,5.8){$\circ$}
+    \put(0.7,6.6){$\circ$}
+    \put(0.6,6.6){$\circ$}
+    \put(1.3,7.2){$\circ$}
+    \put(3.9,6.8){$\circ$}
+    \put(4.3,8.8){$\circ$}
+    \put(3.2,9.8){$\circ$}
+    \put(4.6,7.2){$\circ$}
+    \put(8.7,8.5){$\circ$}
+    \put(5.4,8.4){$\circ$}
+    \put(5.7,9.5){$\circ$}
+    \put(5.8,7.2){$\circ$}
+    \put(5.7,7.4){$\circ$}
+    \put(7.0,7.9){$\circ$}
+    \put(8.0,6.6){$\circ$}
+    \put(7.8,6.1){$\circ$}
+    \put(9.9,5.0){$\circ$}
+    \put(9.1,4.8){$\circ$}
+    \put(9.3,3.8){$\circ$}
+    \put(3.0,1.7){$\circ$}
+    \put(1.1,1.2){$\circ$}
+    \put(5.1,0.2){$\circ$}
+    \put(7.5,1.8){$\circ$}
+    \put(7.7,1.7){$\circ$}
+    \put(8.3,1.0){$\circ$}
+    \put(8.9,1.0){$\circ$}
+\end{picture}
+}
+   \vspace{1ex}
+   \caption{Illustration of the neighbour scheme for
+           particle $i$ marked as the asterisk
+           (after \cite{a_85}).}
+   \label{pic:neighbour}
+\end{figure}
+
+
+Figures \ref{pic:neighbour} and \ref{pic:regtimes} show how
+the Ahmad--Cohen scheme works for one particle \cite{ma_92}.
+At the beginning of the force calculation, a list of neighbour
+objects around the particle $i$ is created first (filled dots).
+From this neighbour list the irregular component
+$\mathbf a_{i,{\rm irr}}$ is calculated, and then the
+summation is continued to the distant particles obtaining
+$\mathbf a_{i,{\rm reg}}$.
+At the same time we also calculate the first time derivative.
+From the equations (\ref{eq:accp0}) and (\ref{eq:accp1})
+the position and velocity of the particle $i$ are predicted.
+At time $t_{1,{\rm irr}}$ we apply the ``corrector'' only for
+$\mathbf a_{i,{\rm irr}}$ from the neighbours;
+the regular component we do not correct, but obtain by
+extrapolating $\mathbf a_{i,{\rm reg}}$.
+At the next step, $t_{2,{\rm irr}}$, the same predictor--corrector
+method proceeds for the neighbour particles,
+while the correction of the distant acceleration term is
+still neglected.
+When $t_1$ is reached, the total force is calculated on the
+basis of the full application of the Hermite predictor--corrector
+method.
+Also, a new neighbour list is constructed using the positions
+at time $t_1$.   % Makino & Aarseth (1992)
+%
+Thus, we calculate at certain times only the forces from
+neighbours (irregular time--step, $t_{\rm irr}$),
+while at other times we calculate both the forces from neighbours
+and distant particles (regular time--step, $t_{\rm reg}$).
+
+
+%%%%%%%%%%%%   Figure b    %%%%%%%%%%%%
+\noindent
+\begin{figure}[hb]
+\centering
+\framebox{
+\unitlength1cm
+\begin{picture}(10,5)
+   \thicklines
+   % lower horizontal line
+      \put(0.5,1){\line(1,0){9.0}}                  % irreg. time
+      \multiput(0.5,1.25)(1,0){9}{\line(0,-1){0.5}} % tickmarks
+      \put(1.2,0.5){$t_{1,{\rm irr}}$}            % ticknames
+      \put(2.2,0.5){$t_{2,{\rm irr}}$}
+      \put(3.4,0.5){...}
+      \put(5.1,0.5){$t_{1^{\ast},{\rm irr}}$}
+      \put(6.1,0.5){$t_{2^{\ast},{\rm irr}}$}
+   % upper horizontal line
+      \put(0.5,4){\line(1,0){9.0}}                  % regul. time
+      \multiput(0.5,4.25)(4,0){3}{\line(0,-1){0.5}} % tickmarks
+      \put(0.4,4.5){$t_0$}                       % ticknames
+      \put(4.4,4.5){$t_1$}
+      \put(8.4,4.5){$t_2$}
+   % vertical dotted lines
+      \dottedline{0.1}(1.5,1)(1.5,4)
+      \dottedline{0.1}(2.5,1)(2.5,4)
+      \dottedline{0.1}(3.5,1)(3.5,4)
+      \dottedline{0.1}(5.5,1)(5.5,4)
+      \dottedline{0.1}(6.5,1)(6.5,4)
+   % distance bars
+   \thinlines
+      \put(0.5,1.6){\vector(1,0){1.0}}
+      \put(1.5,1.6){\vector(-1,0){1.0}}
+      \put(0.6,1.7){$\Delta t_{\rm irr}$}
+      \put(2.0,4.6){\vector(-1,0){1.3}}
+      \put(2.1,4.45){$\Delta t_{\rm reg}$}
+      \put(3.0,4.6){\vector(1,0){1.3}}
+\end{picture}
+}
+  \vspace{1ex}
+  \caption{Regular and irregular time steps (after
+           \cite{ma_92}).}
+  \label{pic:regtimes}
+\end{figure}
+%
+
+For a neighbour list of size $N_{\rm nb} \ll N$, this procedure
+can lead to a significant gain in efficiency, provided the
+respective time scales for $\mathbf a_{i,{\rm irr}}$ and
+$\mathbf a_{i,{\rm reg}}$ are well separated.
+
+The actual size of neighbour spheres in NBODY6++ is controlled
+iteratively by a requirement in order to keep a certain
+optimal number of neighbours.
+This variable, NNBOPT, can be adjusted according to performance
+requirements.
+Its typical values are between 50 and 200 for a very wide range
+of total particle numbers $N$.
+Outside of the half-mass radius, the requirement of having
+NNBOPT neighbours is relaxed due to low local densities.
+Insisting on NNBOPT neigbours could result in undesired large
+amplitude fluctuations of the neighbour radii.
+
+While \cite{mh_88} claim that the optimal neighbour number
+should grow as $N^{3/4}$ (which would be unsuitable for the
+performance on parallel computers), this is still an
+unsettled question.
+\cite{a_85} advocates the coupling of the neighbour radius
+to the local density contrast,
+%%%
+%\begin{eqnarray}
+%   \frac{N_{\rm nb}}{N/2}
+%          \left( \frac{r_{\rm h}}{r_{\rm s}} \right)^3
+%    \approx \frac{n_{\rm nb}}{n_{\rm h}},
+%\end{eqnarray}
+%%
+%where $N$ is the total particle number;
+%$r_{\rm h}$ and $r_{\rm s}$ are the half--mass
+%radius and the radius of the neighbour sphere;
+%and $n_{\rm nb}$ and $n_{\rm h}$ are the
+%particle densities inside the neighbour sphere
+%and inside the half--mass radius, respectively.
+%The approximation in the equation is due to
+%the fact, that one--half of the total particle number
+%is not necessarily the half of the total mass,
+%to which $r_{\rm h}$ is related.
+%%%
+but NBODY6++ does \emph{not} use that, since it makes average
+neighbour numbers much less predictable, which is bad for
+the performance and profiling issues on supercomputers, again.
+
+Resuming, the method of the two particle groups is squeezed
+into the hierarchical time--step scheme making the overall
+view quite complex.
+Each particle is moved due to its time--step order \emph{and}
+the time--steps, because the force calculation is divided:
+In eq.~(\ref{eq:timestep}) a further subscript is needed
+which distinguishes the regular and irregular time step.
+The accuracy can be tuned by $\eta_{\rm irr} \approx 0.01$
+and $\eta_{\rm reg} \approx 0.02$, again.
+
+Both, the neighbour scheme and the hierarchical time--step scheme
+have in common that they are centered on one particle $i$,
+and they distinguish between nearby and remote stars, and they
+save computational time.
+One may ask: What is the intriguing difference between them? ---
+The neighbour scheme is a \emph{spatial} hierarchy, which
+avoids a frequent force calculation of the remote particles,
+because their totality provides a smooth potential which
+does not vary so much with respect to the particle $i$;
+that potential is rather superposed by some fluctuating peaks of
+close--by stars which will be ``worked in'' by the more often
+force determination.
+The time step scheme, in contrast, exhibits the \emph{temporal}
+behaviour of the intervals for re--calculation of the full
+force in order to maintain the exactness of the trajectory;
+time steps chosen too small slow down the advancing calculation
+losing the computer's efficiency.
+%The neighbour scheme and the individual time--step scheme
+%make all calculations non--reversible.
+% Funato {\it et al.} (1996) ???
+% RSp, Teeseminar 11.10.2001
+
+

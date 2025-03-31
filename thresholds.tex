@@ -1,0 +1,55 @@
+
+\section{Thresholds for the variables} \label{ch:thresholds}
+
+
+
+Before the compilation of the code (Chapter~\ref{ch:startrun}),
+the parameter file ({\tt params.h}) should be consulted to check
+whether some vector dimensions are in the desired range.
+Most important are
+%
+\begin{itemize}
+\item the maximum particle number {\tt NMAX},
+\item the maximum number of regularised KS pairs {\tt KMAX}, and
+\item the maximum number of neighbours per particle {\tt LMAX}.
+\end{itemize}
+
+
+The particles are saved in various lists which serve to distinguish
+between their funcionality.
+The table below explains their nomenclature.
+``KS--pairs'' are particles that approach each other in a hyperbolic
+encounter; they are given a special treatment by the code (see
+Chapter~\ref{ch:regularization}).
+If NPAIRS is the amount of KS--pairs, then IFIRST = 2*NPAIRS + 1
+is the first single particle (not member of a KS pair), and N the
+last one.
+NTOT = N + NPAIRS is the total number of particles plus c.m.'s.
+Therefore NMAX, the dimension of all vectors containing particle
+data should be at least of size N + KMAX, where N is the number of
+particles and KMAX the maximum number of expected KS pairs.
+If one starts with single particles, KMAX = 10 or 20 should usually
+be enough, but in clusters with a large number of primordial binaries,
+KMAX must be large.
+%
+\begin{longtable}{@{}p{1.5cm}p{13.0cm}}
+N:      & Total number of particles\\
+NBIN0:  & number of primordial binaries (physical bound stars)\\
+NBIN:   &  ??? \\
+NPAIRS: & Number of binaries (KS--pairs, see Chapter~\ref{ch:regularization}),
+          transient unbound pairs as well as persistent binaries\\
+NTOT:   & = N + NPAIRS; \\
+        & Number of single particles plus centres of masses of
+          regularized (KS) pairs \\
+KMAX:   & threshold for the amount of allowed KS pairs\\
+NMAX:   & = N + KMAX; threshold for the total number of particles and
+          the centre of masses
+\end{longtable}
+
+
+
+\vspace{2cm}
+\noindent
+\fbox{Hier gibt's noch ein Bildchen!}
+
+

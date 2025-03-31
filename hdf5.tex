@@ -1,0 +1,79 @@
+\section{HDF5 Output}
+
+\label{ch:hdf5}
+
+As a fairly recent development (compared to the lifetime of the code) there is a new facility to output all relevant data into HDF5 files. HDF5 is a kind of standard hierarchical data file, which can be read with standard tools, like hdfview or vitables. The code files custom\_output.F and custom\_output\_facility.F contain all relevant routines (original authors Maxwell Cai and Long Wang, heavily updated by Rainer Spurzem in 2021). Every output interval DELTAT a new snapshot collection file with name snap.40\_nnn.h5part is generated, where nnn is the current N-body time. It contains a number of snapshots (``Steps'') in intervals DELTAT/KZ(47)**3 . The procedures use a software package h5 which needs to be located and loaded properly on the system. The output is not exactly compatible with the h5part quasi standard for particle based files in HDF5, even though the name suggests it (for example paraview is unable to read our files). However, simple python scripts (or ipython within a jupyter notebook) have no problem reading our files. 
+
+For every step in every snapshot file the HDF5 file contains by now 163 data vectors; see their definition below. The idea is that all relevant informations (particle positions, velocities, masses, all stellar evolution data, binary data, technical run data, ...) should be accessible in a python or other script, once the step/snapshot is read. So, it is not necessary anymore to browse through many different types of output files (see next chapter~\ref{ch:output}. We will, however, for downward compatibility keep the classical output files redundantly present for the near future.
+
+Note that if KZ(46) = 2 or 4 output in ANSI format in files like single.40.... and binary.40... is created. They are usually only an emergency way out, if there is no HDF5, and quite difficult to interpret (though easy to read technically). Also, if you compile for HDF5 but the HDF5 libraries are not found in the system, the code will fall back to a similar option, writing binary files 40, which are not HDF5. Loading HDF5 libraries and choosing KZ(46) = 1 or 3 is recommended.
+
+Note that option KZ(48) has been introduced, if KZ(48)=1 the second and third derivatives of A are NOT stored, file size reduced by some 30\%; KZ(48) = 0 means all information is in the HDF5 files. 
+
+Notice: if stellar evolution is switched on all quantities are in units of RBAR[pc], ZMBAR[solar masses], TSCALE[Myr], VSTAR[km/s], gravitational constant is G=4.302E-3. (in the N-body output these are listed as R*,M*,T*,V*). Units are combined from these values; for example gravitational potential is in units of G*ZMBAR/RBAR . If you want to get back N-body units from the HDF5 data you have to reverse this; e.g. to get a timestep STEP in N-body units use STEP\_NB = STEP/TSCALE. The values RBAR, ZMBAR, TSCALE and VSTAR are all saved in the Scalar 000 vector (see below). For runs without stellar evolution everything is stored in N-body units.
+
+In the following there is a summary description of items to be found in the HDF5 data structure.
+
+\begin{lstlisting}[breaklines] 
+Contents of AS vector ("000 Scalars"):
+1 = TTOT, 2=FLOAT(NPAIRS), 3=RBAR, 4=ZMBAR, 5=FLOAT(N), 6=TSTAR, 7-9=RDENS(1-3), 10=TTOT/TCR0, 11=TSCALE, 12=VSTAR, 13=RC, 14=NC, 15=VC (sigma), 16=RHOM, 17=CMAX, 18=RSCALE, 20=DMIN1, 21-26: RG(1-3), VG(1-3), 27-30=TIDAL(1-4), 31=GMG,32=OMEGA, 33=DISK, 34-35=A,B(Oort C.), 36:ZMET(Hurley), 37-56=ZPARS(1-20, 20 contains ZMET Tanikawa), 57-60=ETAI,ETAR,ETAU,ECLOSE, 61-64=DTMIN,RMIN,GMIN,GMAX, 65=SMAX,66=FLOAT(NNBOPT), 67=EPOCH0, 68,69,70: REAL(N_SINGLE,N_BINARY,N_MERGER)
+
+Data content, stars (all vectors of dimension N_STAR, not N_SYSTEM anymore); note: e.g. X1 here refers to the quantity "001 X1"; for the meaning of the ID number see the posting on HDF5 above; here I describe only the physical meaning of the data, described by the last piece of the identification attribute):
+
+001-003: X1,X2,X3: x,y,z-coordinates of particle
+004-006: V1,V2,V3: v (velocity in x,y,z)
+007-009: A1,A2,A3: 2*acceleration (force per mass)
+010-012: AD1,AD2,AD3: 6*jerk
+013-015: D21,D22,D23: 24*a(2) (second deriv. of acceleration)
+016-018: D31,D32,D33: 120*a(3) (third deriv.)
+019-022: STEP,STEPR,T0,T0R
+023: M: particle mass
+024: NB-Sph: neighbour sphere radius RSN (in case of first KS binary member: perturber sphere radius)
+025: POT: potential at particle's position (careful, there are some issues for times outside of ADJUST interval)
+026-031: R*,L*,Teff*,RC*,MC*,KW: stellar evolution data (star radius, luminosity, eff. temp., core radius and mass, type code)
+032: Name: particle name
+033: Type: particle label LAB (0: single, -1 KS member; notice soft binaries just occur as two singles here with label 0)
+035: ASPN: dimensionless spin for compact remnants
+036: TEV:  next stellar evolution time (N-body units)
+037: TEV0: last stellar evolution time (N-body units)
+038: EPOCH: formation time of star (physical units); AGE = TEV0()*TSTAR-EPOCH()
+039: ZMETA: individual metallicity of star (not yet supported)
+040: NPOPU: population index of star (not yet supported)
+041-047: XMNS0, BMAG0, BMAG, AGE0, AGEX, PERIOD, PDOT, reserved for new pulsar treatment (not yet supported)
+
+Important Notice 1: For TEV, TEV0, EPOCH, the conventions of the code are ALWAYS used in the HDF5 data, i.e. TEV, TEV0 in N-body units; EPOCH in physical units (often Myr). So here the statement that in case of stellar evolution quantities are in physical units does NOT always apply (not for TEV, TEV0). This is to avoid further confusion, because we have already in the code the mix of units (AGE, EPOCH physical, TEV, TEV0 N-body units). Notice also that AGE= TEV0()*TSTAR-EPOCH() gives the AGE of a star when its stellar evolution was last updated. If you want something more close to a current age, you can use AGE = TTOT*TSTAR - EPOCH().
+
+Important Notice 2: After discussion in October the centers-of-masses (c.m.'s) of KS binaries are now NOT included anymore in the data for single stars; they are only in the binary data as given below.
+
+
+Data Content Binaries: (all vectors of dimension N_BINARY):
+
+101-103: Bin cm X1-3,
+104-106: Bin cm V1-3,
+107-109: Bin cm A1-3,
+110-112: Bin cm AD1-3,
+113-115: Bin cm D21-3,
+116-118: Bin cm D31-3,
+119-122: Bin cm STEP,STEPR,T0,T0R: same like above in STARS for the c.m. of a binary
+123-124: M1*,M2*: masses of binary components (solar masses)
+125-127: Bin rel X1-3,
+128-130: Bin rel V1-3,
+131-133: Bin rel A1-3, [ implemented Nov. 24, technically ok]
+134-136: Bin rel AD1-3, [ implemented Nov. 24, technically ok]
+137-139: Bin rel D21-3, [ implemented Nov. 24, technically ok]
+140-142: Bin rel D31-3, [ implemented Nov. 24, technically ok]
+143: Bin rel POT
+144-153: RS1*-2*,L1*-2*,Teff1*-2*,RC1*-2*,MC1*-2*: as above stellar evolution, for both binary components
+154-157: A,ECC,P,G: semi-major axis in a.u., eccentricity,period in days, external gravitational perturbation
+158-160: KW1-2, cm KW: stellar types, binary type
+161-163: Name1-2, cm Name: names of binary components, name of c.m.
+164-165: ASPN1-2: dimensionless spins of binary members
+166-167: TEV1-2:  next stellar evolution time (N-body units)
+168-169: TEV01-2: last stellar evolution time (N-body units)
+170-171: EPOCH1-2: formation time of star (Myr); AGE = TEV0()*TSTAR-EPOCH()
+172-173: ZMETA1-2: individual metallicity of star (not yet supported)
+174-175: NPOPU1-2: population index of star (not yet supported)
+176-189: 1-2: XMNS0, BMAG0, BMAG, AGE0, AGEX, PERIOD, PDOT, reserved for new pulsar treatment (not yet supported)
+
+Contents of MERGER subgroup: not yet analyzed, mostly empty, may be absorbed into BINARY group in the future. 
+\end{lstlisting}

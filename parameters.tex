@@ -1,0 +1,128 @@
+\section{Further important parameters}
+\label{ch:parameters}
+
+The parameters described in the following tables are currently compiled into the code - after any change the relevant sections have to be recompiled. The tables have been taken from \cite{Kamlah2022}. Further parameters to be discussed here should be \texttt{FctorCl}, mass loss factor for stellar collisions (see \cite{Rizzuto2021}); and further parameters to describe compact remnant kicks at formation and at relativistic mergers (Manuel Arca Sedda, in preparation, in cooperation with Sambaran Banerjee). They are \texttt{kicktype} and \texttt{BHSPINFL}.
+
+Routines \texttt{kick.F, coal.f, mydump.F} changed, there is a new routine \texttt{kickGW.f} and a new common block \texttt{/REL/} with scalar spin vector \texttt{ASPN}.
+
+From \texttt{kick.F} comment lines and Manuel personal communication:
+\begin{lstlisting}[breaklines]
+*  M.A.S. MAS Manuel Arca Sedda 03 Nov 2021
+*  Added a BH spin flag (BHSPINFL) to select BH natal spins
+*     BHSPINFL = 0 - zero spins
+*     BHSPINFL = 1 - uniform spin distribution *
+*     BHSPINFL = 2 - Gaussian spin distribution with mean = 0.5, dispersion = 0.2 *
+*     BHSPINFL = 3 - Maxwellian spin distribution with sigma = 0.2 *
+*     BHSPINFL = 4 - Geneva models (implemented by Sambaran) *
+*     BHSPINFL = 5 - Mesa models (implemented by Sambaran) *
+*  A new vector in common6.h has been defined, named
+*     ASPN(NMAX)
+
+kicktype == -2 corresponds to zero recoils
+kicktype == -1 corresponds to Vkick = 10^4 km/s
+kicktype == 0  uses a fitting formula for BHs with spin < 0.01
+kicktype == 1  adopts the full NR fitting formulae
+\end{lstlisting}
+
+Stellar evolution levels: A: before LIGO/Virgo (used in \cite{Wang2016}); B: current level; C: next level. 
+
+All these parameters will in the future become part of the input file using the \texttt{NAMELIST} input format.
+
+
+\begingroup
+	
+	\setlength{\tabcolsep}{8.0pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{1.31} % Default value: 1
+	
+	
+	\definecolor{cadmiumgreen}{rgb}{0.0,0.42,0.24}
+		\begin{table}
+			\centering
+			\begin{tabular}{|l|l|l|l|l|}
+				\hline
+				\multicolumn{2}{|c|}{\texttt{Code}} & \multicolumn{3}{c||}{\large{\texttt{Nbody6++GPU}}}  \\
+				\hline
+				\hline
+				\multicolumn{2}{|c|}{\texttt{BSE} \& \texttt{SSE} ?} & \multicolumn{3}{c||}{\textbf{Stellar evolution level}} \\
+				\hline
+				\hline 
+				\textbf{Relevance} & \textbf{Routine} & 
+				\makecell{\texttt{Level A}} &  
+				\makecell{\texttt{Level B}} & 
+				\makecell{\texttt{Level C}} \\
+				\hline \hline 
+				\textbf{SSE} & \texttt{hrdiag.f} & 
+				\makecell{\texttt{ecflag} = 0 \\ \texttt{wdflag}=1 \\ \texttt{nsflag} = 1 \\ \texttt{psflag} = 0} & 
+				\makecell{ \textcolor{orange}{\texttt{ecflag} = 1} \\ \textcolor{orange}{\texttt{wdflag}=1} \\  \texttt{nsflag} = 2,\textcolor{orange}{3,4}  \\ \textcolor{orange}{\texttt{psflag} = 0},1}  &
+				\makecell{\texttt{psflag} = 2,3} \\ 
+				\hline 
+				\textbf{SSE} & 
+				\texttt{mlwind.f} & 
+				\makecell{\texttt{mdflag} = 1 \\ \texttt{neta} = 0.5 \\ \texttt{bwind} = 0.0 \\ \texttt{flbv} = 1.5} & 
+				\makecell{\textcolor{orange}{\texttt{mdflag}} = 2,\textcolor{orange}{3} \\ \textcolor{orange}{\texttt{neta} = 0.5} \\ \textcolor{orange}{\texttt{bwind} = 0.0} \\ \textcolor{orange}{\texttt{flbv} = 1.5} } & 
+				\makecell{\texttt{mdflag} = 4 \\ \texttt{neta} = 0.477 \\ \texttt{bwind} = $ 0.0$ \\ \texttt{flbv} = 1.5 } \\
+				\hline \hline 
+				\textbf{BSE} & 
+				\texttt{comenv.f} & 
+				\makecell{\texttt{LAMBDA} = 0.5 \\ \texttt{ALPHA1} = 3.0} & \makecell{\textcolor{orange}{\texttt{LAMBDA} = 0.5} \\ \textcolor{orange}{\texttt{ALPHA1} = 3.0}}  & 
+				\makecell{\texttt{LAMBDA} = 0.0 \\ \texttt{ALPHA1} = 1.0} \\
+				\hline 
+				\textbf{BSE} & 
+				\texttt{kick.f} & 
+				\makecell{\texttt{bhflag} = 0 \\ \texttt{KMECH} = 1\\ \texttt{disp} = 30.0, 190.0, 265.0 \\ \texttt{ecsig} = 20.0 \\ \texttt{wdsig1} = 2.0 \\ \texttt{wdsig2} = 2.0 \\ \texttt{wdkmax} = 6.0 \\ \texttt{vfac} = 0.0} & 
+				\makecell{\textcolor{orange}{\texttt{bhflag} = 2} \\ \textcolor{orange}{\texttt{KMECH} = 1},2,3\\ \textcolor{orange}{\texttt{disp} = 265.0} \\ \textcolor{orange}{\texttt{ecsig} = 3.0} \\ \textcolor{orange}{\texttt{wdsig1} = 2.0} \\ \textcolor{orange}{\texttt{wdsig2} = 2.0} \\ \textcolor{orange}{\texttt{wdkmax} = 6.0} \\ \textcolor{orange}{\texttt{vfac} = 0.0}} &
+				\makecell{\texttt{bhflag} = 3,4 \\ \texttt{KMECH} = 4\\ \texttt{disp} = 265.0 \\ \texttt{ecsig} = 3.0 \\ \texttt{wdsig1} = 2.0 \\ \texttt{wdsig2} = 2.0 \\ \texttt{wdkmax} = 6.0 \\ \texttt{vfac} = 0.0} \\
+				\hline 
+				\textbf{BSE} & 
+				\texttt{roche.f} &   
+				\makecell{\texttt{acc2} = 1.5 \\ \texttt{beta} = 0.125 \\ \texttt{epsnov} = 0.001 \\ \texttt{eddfac} = 100.0 \\ \texttt{gamm1} = -1.0 \\ \texttt{xi} = 1.0} &
+				\makecell{\textcolor{orange}{\texttt{acc2} = 1.5} \\ \textcolor{orange}{\texttt{beta} = 0.125} \\ \textcolor{orange}{\texttt{epsnov} = 0.001} \\ \textcolor{orange}{\texttt{eddfac} = 100.0} \\ \textcolor{orange}{\texttt{gamm1} = -1.0} \\ \textcolor{orange}{\texttt{xi} = 1.0}}  &
+				\makecell{\texttt{acc2} = 1.5 \\ \texttt{beta} = 0.125 \\ \texttt{epsnov} = 0.001 \\ \texttt{eddfac} = 100.0 \\ \texttt{gamm1} = 0.0,-2.0 \\ \texttt{xi} = 1.0} \\
+				\hline \hline
+			\end{tabular}
+			\caption{Table showing our stellar evolution \texttt{levels A, B} and \texttt{C} with respect to changes in the stellar evolution routines and the parameters in the codes \texttt{Nbody6++GPU} (left) and \texttt{MOCCA} (right). The parameters used in the simulations of this study (\texttt{delayedSNe-Uniform \& rapidSNe-Sana}) are shown in \textcolor{orange}{orange}. All excluded stellar evolution routines not shown in the table are largely identical to the original \texttt{SSE} and \texttt{BSE} \cite{Hurleyetal2000,Hurleyetal2002b}. The exact meaning of the parameters and the literature basis for the choice of these are given in Tab.\ref{Nbody6++GPU_Stellar_evolution_levels_literature} for \texttt{Nbody6++GPU} and in Tab.\ref{MOCCA_Stellar_evolution_levels_literature} for \texttt{MOCCA}. \texttt{Level C} includes stellar evolution settings that are available in the codes, but those that are not present in \texttt{level B} have not yet undergone sufficient testing and are therefore deemed experimental as of the writing of this paper.
+				The \texttt{Level A} stellar evolution should \textbf{not} be used anymore if there are other options in \texttt{Level B} available for that parameter and is included to give a reference guide, especially when analysing data from older simulations such as those from \cite{Wang2016} and \cite{Panamarev2019}. Table taken from \cite{Kamlah2022}.}
+			\label{Stellar_evolution_levels_parameters}
+		\end{table}
+	\endgroup
+	
+	\begingroup
+	\begin{landscape}
+		\begin{table}
+			\centering
+			\begin{tabular}{|l|l|l|l|}
+				\hline \textbf{Relevance} & \textbf{Routine} & \textbf{Parameter} & \textbf{Parameter option and source} \\
+				\hline \hline \textbf{SSE} & \texttt{hrdiag.f} & \makecell[l]{\texttt{ecflag} - Enables or disables ECSNe \\ \texttt{nsflag} - Choices for how NS/BH masses are calculated \\ \texttt{psflag} - No, strong, weak or moderate PPISNe \\ \texttt{wdflag} - Choices for how the white dwarfs are cooled} & \makecell[l]{\texttt{ecflag} = 0 $\rightarrow$ No ECSNe, $\quad$ \textcolor{orange}{\texttt{ecflag} = 1 $\rightarrow$ ECSNe from} \cite{Belczynskietal2008} \\ \texttt{nsflag} =  0 $\rightarrow$ Use original SSE NS/BH mass \cite{Hurleyetal2000} \\ \texttt{nsflag} = 1 $\rightarrow$ Use FeNi core mass from \cite{Belczynskietal2002} \\ \texttt{nsflag} = 2 $\rightarrow$ Use FeNi core mass from \cite{Belczynskietal2008} \\  \textcolor{orange}{\texttt{nsflag} = 3 $\rightarrow$ Remnant masses with \textbf{rapid} SNe} \cite{Fryeretal2012} \\   \textcolor{orange}{\texttt{nsflag} = 4 $\rightarrow$ Remnant masses with \textbf{delayed} SNe} \cite{Fryeretal2012} \\  \texttt{nsflag} = 5 $\rightarrow$ Remnant masses from \cite{EldridgeTout2004b}\\ \textcolor{orange}{\texttt{psflag} = 0 $\rightarrow$ No PPISNe/PISNe} \\ \texttt{psflag} = 1 $\rightarrow$ \textbf{Strong} PPISNe/PISNe \cite{Belczynskietal2016} \\ \texttt{psflag} = 2 $\rightarrow$ \textcolor{red}{\textbf{Weak} PPISNe/PISNe} \cite{Leungetal2019b,Leungetal2020c} \\ \texttt{psflag} = 3 $\rightarrow$ \textcolor{red}{\textbf{Moderate} PPISNe/PISNe} \cite{Leungetal2019b,Leungetal2020c} \\ \texttt{wdflag} = 0 $\rightarrow$ Mestel cooling \cite{Mestel1952a} \\ \textcolor{orange}{\texttt{wdflag} = 1 $\rightarrow$ Modified Mestel cooling} \cite{Toutetal1997}} \\
+				\hline \textbf{SSE} & \texttt{mlwind.f} & \makecell[l]{\texttt{mdflag} - Sets the wind mass-loss prescription \\ \texttt{neta} - Reimers mass-loss coefficient for giant winds \\  \texttt{bwind} - Companion-enhanced mass-loss factor \\ \texttt{flbv} - Coefficient for LBV wind rate if \texttt{mdflag}$>2$} & \makecell[l]{\texttt{mdflag} = 1 $\rightarrow$ Mass loss from \cite{Hurleyetal2000} \\ \texttt{mdflag} = 2 $\rightarrow$ Mass loss added for LBVs \cite{HumphreysDavidson1979} \\ $\qquad\qquad$ $\&$ \cite{Belczynskietal2010} \\  \textcolor{orange}{\texttt{mdflag} = 3 $\rightarrow$ Mass loss from} \cite{Belczynskietal2010} \textcolor{orange}{+ Metallicity factor from} \cite{Vinketal2001} \\ $\qquad\quad$ \textcolor{orange}{+ Mass loss for hot, massive H-rich O/B stars from} \cite{Vinketal2001} \\ \texttt{mdflag} = 4 $\rightarrow$ Mass loss without bi-stability jump \cite{Belczynskietal2010} \\ $\qquad\quad$+ Metallicity factor from \cite{Belczynskietal2010} \\ \textcolor{orange}{\texttt{neta} = 0.5} \cite{KudritzkiReimers1978}, \texttt{neta} = 0.477 \cite{McDonaldZijlstra2015} \\ \textcolor{orange}{\texttt{bwind} = 0.0}, \cite{Hurleyetal2002b} \quad \textcolor{orange}{\texttt{flbv} = 1.5} \cite{Belczynskietal2010}} \\
+				\hline \hline \textbf{BSE} & \texttt{comenv.f} & \makecell[l]{\texttt{LAMBDA} - Structural parameter for giant envelope \\ and control of recombination energy used \\ \texttt{ALPHA1} - factor scaling the amount of orbital energy \\ used for envelope liberation in CEE} & \makecell[l]{ \textcolor{orange}{\texttt{lambda} = 0.5, \texttt{alpha} = 3.0} \cite{GiacobboMapelli2018} ($\lambda_{\mathrm{CE}}$: depends on stellar type \\ and recombination energy; $\alpha_{\mathrm{CE}}$ = \texttt{ALPHA1}) \\ \texttt{lambda} = 0.0, \texttt{alpha} = 1.0 ($\lambda_{\mathrm{CE}}$: depends on stellar type, \\ NO recombination energy used; $\alpha_{\mathrm{CE}}$ = \texttt{ALPHA1}, see Appendix A1)}\\
+				\hline \textbf{BSE} & \texttt{kick.f}  & \makecell[l]{\texttt{bhflag} - BH kicks, same as for CC NSs \\ $\qquad\qquad$ but reduced for momentum cons. if fallback \\ \texttt{KMECH} - NS, BH kick mechanism: standard momentum cons. \\  convection-asymm., collapse-asymm. \& neutrino driven \\ \texttt{disp} - Dispersion in a Maxwellian velocity distribution \\ $\qquad\qquad$ or the maximum value for a flat distribution  \\ \texttt{ecsig} - Dispersion for ECSNe \\ \texttt{wdsig1} - Dispersion for He and CO WDs \\ \texttt{wdsig2} - Dispersion for ONe WDs \\ \texttt{wdkmax} - Maximum WD kick velocity,  \\ \texttt{vfac} - Option to scale by \texttt{VSTAR} } &  \makecell[l]{\texttt{bhflag} = 0 $\rightarrow$ No BH kicks $\quad$ \textcolor{black}{\texttt{bhflag} = 1 $\rightarrow$ unscaled kicks: BHs \& NSs} \cite{Belczynskietal2002}
+					\\ \textcolor{orange}{\texttt{bhflag} = 2 $\rightarrow$ fallback-scaled kicks for BHs and NSs (\texttt{KMECH})} \\ \texttt{bhflag} = 3 $\rightarrow$ \texttt{KMECH} kicks + BH natal spins \texttt{Geneva} models \cite{Banerjeeetal2020,Banerjee2021a} \\ \texttt{bhflag} = 4 $\rightarrow$  \texttt{KMECH} kicks + BH natal spins \texttt{MESA} models \cite{Banerjeeetal2020,Banerjee2021a} \\ \textcolor{orange}{\texttt{bhflag} $>4$ $\rightarrow$ \texttt{KMECH} kicks + BH natal spins \texttt{Fuller} model} \cite{Banerjeeetal2020,Banerjee2021a} \\ \textcolor{orange}{\texttt{KMECH} = 1 $\rightarrow$ standard mom. conserving kick} \cite{Belczynskietal2008} \\ \texttt{KMECH} = 2 $\rightarrow$ Convection-asymm.-driven kick \cite{Banerjeeetal2020}\\ \texttt{KMECH} = 3 $\rightarrow$ Collapse-asymm.-driven kick \cite{Banerjeeetal2020}\\ \texttt{KMECH} = 4 $\rightarrow$ Neutrino-driven kick\cite{Banerjeeetal2020}\\ \texttt{disp} = 30.0 \cite{Wangetal2016}, \texttt{disp} = 190.0 \cite{HansenPhinney1997}, \\ \textcolor{orange}{\texttt{disp} = 265.0} \cite{Hobbsetal2005} \\ \textcolor{orange}{\texttt{ecsig} = 3.0} \cite{GessnerJanka2018}, \textcolor{orange}{\texttt{wdsig1}=\texttt{wdsig2} = 2.0, \quad \texttt{wdkmax} = 6.0} \cite{Fellhaueretal2003}} \\
+				\hline \textbf{BSE} & \texttt{roche.f} & \makecell[l]{\texttt{acc2} - Bondi-Hoyle wind accretion efficiency factor \\ \texttt{beta} - Wind velocity factor \\ \texttt{epsnow} - Fraction of material accreted onto a WD \\ $\qquad\qquad$ ejected in a nova \\ \texttt{eddfac} - Eddington limit for accretion onto \\ $\qquad\qquad$ a degenerate object \\ \texttt{gamm1} - Choices for angular momentum changes \\ $\qquad\qquad$ owing to RLOF mass-loss \\ \texttt{xi} - Factor to reduce spin angular momentum \\ $\qquad\qquad$ change owing to wind accretion} & \makecell[l]{\textcolor{orange}{\texttt{acc2} = 1.5} \cite{BondiHoyle1944} \\ \textcolor{orange}{\texttt{beta} = 0.125 $\rightarrow$ lower limit} \cite{Hurleyetal2002b}  \\ \textcolor{orange}{\texttt{epsnow} = 0.001} \cite{Hurleyetal2002b}\\ \textcolor{orange}{\texttt{eddfac} = 100 $\rightarrow$ $100 \times$ Eddington limit accretion rate} \cite{Hurleyetal2002b} \\ \texttt{gamm1} = -2.0 $\rightarrow$  Super-Eddington mass transfer rates \cite{Hurleyetal2002b} \\ \textcolor{orange}{\texttt{gamm1} = -1.0 $\rightarrow$ Lost material carries with it} \\  $\qquad\qquad$ \textcolor{orange}{the specific angular momentum of the primary} \cite{Hurleyetal2002b} \\ \texttt{gamm1} $>$ 0.0  $\rightarrow$ takes away a fraction \texttt{gamm1} of $J_{\rm orb}$ \cite{Hurleyetal2002b}\\ \textcolor{orange}{\texttt{xi} = 1.0} \cite{Hurleyetal2002b}}\\ 
+				\hline \hline
+			\end{tabular}
+			\caption{Table showing the options in the \texttt{SSE \& BSE} stellar evolution with respect to the parameters in \texttt{Nbody6++GPU}. The parameters used in the simulations of this study (\texttt{delayedSNe-Uniform \& rapidSNe-Swana}) are shown in \textcolor{orange}{orange}. The parameters that are present in \texttt{Nbody6++GPU} version but not in \texttt{MOCCA} are shown in \textcolor{red}{red}. All the stellar evolution routines not listed here are largely identical to the original \texttt{SSE} and \texttt{BSE} \cite{Hurleyetal2000,Hurleyetal2002b}. The abbreviations are as follows: \textbf{ECSNe} - eletron capture supernova, \textbf{AIC} - accretion-induced collapse, \textbf{MIC} - merger-induced collapse, \textbf{PPISNe} - pulsating pair instability supernova, \textbf{PISNe} - pair instability supernova, \textbf{LBV} - luminous blue variable, \textbf{NS} - neutron star, \textbf{BH} - black hole.}
+			\label{Nbody6++GPU_Stellar_evolution_levels_literature}
+		\end{table}
+	\end{landscape}
+	
+	\begin{landscape}
+		\begin{table}
+			\centering
+			\begin{tabular}{|l|l|l|l|}
+				\hline \textbf{Relevance} & \textbf{Routine} & \textbf{Parameter} & \textbf{Parameter option and source} \\
+				\hline \hline \textbf{SSE} & \texttt{hrdiag.f} & \makecell[l]{\texttt{ecflag} - Enables or disables ECSNe \\ \texttt{compactmass} - Choices for how NS/BH masses are calculated \\ \texttt{piflag} - No, strong or Spera PPISNe \\ \texttt{wdflag} - Choices for how the white dwarfs are cooled} & \makecell[l]{\texttt{ecflag} = 0 $\rightarrow$ No ECSNe \\ \textcolor{orange}{\texttt{ecflag} = 1 $\rightarrow$ ECSNe with remnant mass from} \cite{Belczynskietal2008} \\ \texttt{compactmass} =  0 $\rightarrow$ Use original SSE NS/BH mass \cite{Hurleyetal2000} \\ \texttt{compactmass} = 1 $\rightarrow$ Use FeNi core mass from \cite{Belczynskietal2002} \\ \texttt{compactmass} = 2 $\rightarrow$ Use FeNi core mass from \cite{Belczynskietal2008} \\  \textcolor{orange}{\texttt{compactmass} = 3 $\rightarrow$ Remnant masses with \textbf{rapid} SNe} \cite{Fryeretal2012} \\   \textcolor{orange}{\texttt{compactmass} = 4 $\rightarrow$ Remnant masses with \textbf{delayed} SNe} \cite{Fryeretal2012} \\  \texttt{compactmass} = 5 $\rightarrow$ Remnant masses from \cite{EldridgeTout2004b}\\ \textcolor{orange}{\texttt{piflag} = 0 $\rightarrow$ No PPISNe/PISNe} \\ \textcolor{red}{\texttt{piflag} = 1 $\rightarrow$ PPISNe/PISNe} \cite{SperaMapelli2017} \\ \texttt{piflag} = 2 $\rightarrow$ \textbf{Strong} PPISNe/PISNe \cite{Belczynskietal2016} \\ \texttt{wdflag} = 0 $\rightarrow$ Mestel cooling \cite{Mestel1952a} \\ \textcolor{orange}{\texttt{wdflag} = 1 $\rightarrow$ Modified Mestel cooling} \cite{Toutetal1997}} \\
+				\hline \textbf{SSE} & \texttt{mlwind.f} & \makecell[l]{\texttt{edd\_factor} - Sets the wind mass-loss prescription \\ \texttt{neta} - Reimers mass-loss coefficient for giant winds \\  \texttt{bwind} - Companion-enhanced mass-loss factor \\ \texttt{flbv} - Coefficient for LBV wind rate if \texttt{mdflag}$>2$} & \makecell[l]{\textcolor{orange}{\texttt{edd\_factor} = 0 $\rightarrow$ Mass loss from} \cite{Belczynskietal2010,Chenetal2015} \\ \texttt{edd\_factor} = 1 $\rightarrow$ Mass loss from \cite{Chenetal2015,Giacobboetal2018} \\ \ \textcolor{orange}{\texttt{neta} = 0.5} \cite{KudritzkiReimers1978}, \texttt{neta} = 0.477 \cite{McDonaldZijlstra2015} \\  \textcolor{red}{\texttt{neta} = -0.172} \cite{SchroederCuntz2005} \\ \textcolor{orange}{\texttt{bwind} = 0.0}, \cite{Hurleyetal2002b} \quad \textcolor{orange}{\texttt{flbv} = 1.5} \cite{Belczynskietal2010}} \\
+				\hline \hline \textbf{BSE} & \texttt{comenv.f} & \makecell[l]{\texttt{LAMBDA} - Structural parameter for giant envelope \\ and control of recombination energy used \\ \texttt{ALPHA1} - factor scaling the amount of orbital energy \\ used for envelope liberation in CEE} & \makecell[l]{ \textcolor{orange}{\texttt{lambda} = 0.5, \texttt{alpha} = 3.0} \cite{GiacobboMapelli2018} ($\lambda_{\mathrm{CE}}$: depends on stellar type \\ and recombination energy; $\alpha_{\mathrm{CE}}$ = \texttt{ALPHA1}) \\ \texttt{lambda} = 0.0, \texttt{alpha} = 1.0 ($\lambda_{\mathrm{CE}}$: depends on stellar type, \\ NO recombination energy used; $\alpha_{\mathrm{CE}}$ = \texttt{ALPHA1}, see Appendix A1)}\\
+				\hline \textbf{BSE} & \texttt{kick.f}  & \makecell[l]{\texttt{nsflag\_kick, bhflag\_kick} - BH kicks, same as for CC NSs \\ $\qquad\qquad$ but reduced for momentum cons. for fallback: \\ $\qquad\qquad$ standard momentum cons., convection-asymm. \\ $\qquad\qquad$ collapse-asymm. \& neutrino driven  \\ \texttt{sigmans, sigmabh} - NS/BH Maxwellian kick velocity dispersion \\ \texttt{sigmac} - ECSNe/AIC/MIC Maxwellian kick velocity dispersion \\ \texttt{vkickwd} - He/CO/ONeWDs Maxwellian kick velocity dispersion} &  \makecell[l]{\texttt{nsflag\_kick, bhflag\_kick} = 0 $\rightarrow$ no kicks at all \\ \texttt{nsflag\_kick, bhflag\_kick} = 1 $\rightarrow$ kicks for single NS formation only \\ \texttt{nsflag\_kick, bhflag\_kick} = 2 $\rightarrow$ kicks for single and binary formation NS \\ \textcolor{orange}{\texttt{nsflag\_kick, bhflag\_kick} = 3 $\rightarrow$ standard mom. conserving kick} \cite{Belczynskietal2008} \\ \texttt{nsflag\_kick, bhflag\_kick} = 4 $\rightarrow$ Convection-asymm.-driven kick \\ $\qquad\qquad$ \cite{Schecketal2004,FryerYoung2007, Banerjeeetal2020}\\ \texttt{nsflag\_kick, bhflag\_kick} = 5 $\rightarrow$ Collapse-asymm.-driven kick \\ $\qquad\qquad$ \cite{Fryer2004,MeakinArnett2006,Banerjeeetal2020}\\ \texttt{nsflag\_kick, bhflag\_kick} = 6 $\rightarrow$ Neutrino-driven kick \\ $\qquad\qquad$ \cite{Fulleretal2003,FryerKusenko2006,Banerjeeetal2020}\\ \texttt{sigmans, sigmabh} = 190.0 \cite{HansenPhinney1997}, \texttt{sigmans, sigmabh} = 30.0 \cite{Wangetal2016} \\ \textcolor{orange}{\texttt{sigmans, sigmabh} = 265.0} \cite{Hobbsetal2005} \\ \textcolor{orange}{\texttt{sigmac} = 3.0} \cite{GessnerJanka2018} \\ \textcolor{orange}{\texttt{vkickwd} = 0.0}, \quad \texttt{vkickwd} = 2.0 \cite{Fellhaueretal2003}} \\
+				\hline \textbf{BSE} & \texttt{evolv2b.f} & \makecell[l]{\texttt{acc2} - Bondi-Hoyle wind accretion efficiency factor \\ \texttt{beta} - Wind velocity factor \\ \texttt{epsnow} - Fraction of material accreted onto a WD \\ $\qquad\qquad$ ejected in a nova \\ \texttt{eddfac} - Eddington limit for accretion onto \\ $\qquad\qquad$ a degenerate object \\ \texttt{gamma} - Choices for angular momentum changes \\ $\qquad\qquad$ owing to RLOF mass-loss \\ \texttt{xi} - Factor to reduce spin angular momentum \\ $\qquad\qquad$ change owing to wind accretion} & \makecell[l]{\textcolor{orange}{\texttt{acc2} = 1.5} \cite{BondiHoyle1944} \\ \textcolor{orange}{\texttt{beta} = 0.125 $\rightarrow$ lower limit} \cite{Hurleyetal2002b}  \\ \textcolor{orange}{\texttt{epsnow} = 0.0} \cite{Hurleyetal2002b}\\ \textcolor{orange}{\texttt{eddfac} = 100 $\rightarrow$ $100 \times$ Eddington limit accretion rate} \cite{Hurleyetal2002b} \\ \texttt{gamma} = -2.0 $\rightarrow$  Super-Eddington mass transfer rates \cite{Hurleyetal2002b} \\ \textcolor{orange}{\texttt{gamma} = -1.0 $\rightarrow$ Lost material carries with it} \\  $\qquad\qquad$ \textcolor{orange}{the specific angular momentum of the primary} \cite{Hurleyetal2002b} \\ \texttt{gamma} $>$ 0.0  $\rightarrow$ takes away a fraction \texttt{gamma} of $J_{\rm orb}$ \cite{Hurleyetal2002b} \\ \textcolor{red}{\texttt{gamma} = 3  $\rightarrow$ following MB prescriptions by} \cite{Rappaportetal1983,Bellonietal2018c}\\ \textcolor{orange}{\texttt{xi} = 1.0} \cite{Hurleyetal2002b}}\\ 
+				\hline \hline
+			\end{tabular}
+			\caption{Table showing the options in the \texttt{SSE \& BSE} stellar evolution with respect to the parameters in \texttt{MOCCA}. The parameters used in the simulations of this study (\texttt{delayedSNe-Uniform \& rapidSNe-Sana}) are shown in \textcolor{orange}{orange}. The parameters that are present in \texttt{MOCCA} version but not in \texttt{Nbody6++GPU} are shown in \textcolor{red}{red} (the added CV and symbiotic star treatment by \cite{Bellonietal2018c,Belloni2020b} are not listed here). All the stellar evolution routines not listed here are largely identical to the original \texttt{SSE} and \texttt{BSE} \cite{Hurleyetal2000, Hurleyetal2002b}. The abbreviations are as follows: \textbf{ECSNe} - eletron capture supernova, \textbf{AIC} - accretion-induced collapse, \textbf{MIC} - merger-induced collapse, \textbf{PPISNe} - pulsating pair instability supernova, \textbf{PISNe} - pair instability supernova, \textbf{LBV} - luminous blue variable, \textbf{NS} - neutron star, \textbf{BH} - black hole.}
+			\label{MOCCA_Stellar_evolution_levels_literature}
+		\end{table}
+	\end{landscape}
+	\endgroup
+	
+
+
+

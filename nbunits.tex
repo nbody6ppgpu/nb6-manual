@@ -1,0 +1,67 @@
+
+\section{Nbody--units}   \label{ch:nbtime}
+
+The NBODY--code uses Dimensionless units, so--called
+``Nbody units''.
+They are obtained when setting the gravitational
+constant $G$ and the initial total cluster mass $M$
+equal to 1, and the initial total energy $E$ to $-1/4$
+(see \cite{hm_86}, \cite{ahw_74}).
+
+Since the total energy $E$ of the system is $E = K + W$
+with $K = \frac{1}{2}M\langle v^2\rangle$ being
+the total kinetic energy and $W = -(3\pi/32)GM^2/R$
+the potential energy of the Plummer sphere, we
+find from the virial theorem that
+%
+\begin{eqnarray}
+   E = \frac{1}{2}W = -\frac{3\pi}{64}\frac{GM^2}{R}.
+           \label{eq:totenergy}
+\end{eqnarray}
+%
+$R$ is a quantity which determines the length scale of
+a Plummer sphere.
+Using the specific definitions for $G$, $M$, and $E$ above,
+this scaling radius becomes $R = 3\pi/16$ in dimensionless
+units.
+The half mass radius $r_{\rm h}$ can easily be evaluated
+by the formula (e.g.\ \cite{s_87}):
+%
+\begin{eqnarray}
+   M(r) = M\frac{r^3/R^3}{(1+r^2/R^2)^{3/2}}
+\end{eqnarray}
+%
+when setting $M(r_{\rm h}) = \frac{1}{2}M$.
+It yields $r_{\rm h} = (2^{2/3}-1)^{-1/2}R = 1.30\, R$.
+The half--mass radius is located at $R = 0.766$,
+or about 3/4 ``Nbody--radii''.
+
+The virial radius of a system is defined by
+$R_{\rm vir} = GM^2/2\vert W \vert $, while the
+r.m.s.\ velocity is $\langle v^2\rangle^{1/2} = 2K/M$.
+In virial equilibrium $\vert W\vert = 2K$, so it follows
+for the crossing time
+%
+\begin{eqnarray}
+  t_{\rm cr} := {2 R_{\rm vir} \over \langle v^2\rangle^{1/2} }
+      = \frac{ GM^{5/2} }{ (2\vert E\vert )^{3/2} }.
+\end{eqnarray}
+
+The setting of $G=M=1$ and $E=-0.25$ also determines the
+unit of time;
+so it follows that $t_{\rm cr} = 2\sqrt{2}$ in $N$-body units.
+By inversion we have
+\begin{eqnarray}
+  \tau_{\rm NB} = \frac{ GM^{5/2} }{ (4\vert E\vert )^{3/2} }, \label{eq:tnb}
+\end{eqnarray}
+for the unit of time $\tau_{\rm NB}$.
+The virial radius of Plummer's model is $R_{\rm vir} = 1$ in
+$N$-body units.
+%This time is not related to a physical meaning in cluster
+%physics, but it is just an easy handling of the time
+%measurement in simulations.
+%However, it can be shown that the factor $2\sqrt{2}$
+%is rather close to the crossing time at half--mass
+%radius in a Plummer sphere.
+
+

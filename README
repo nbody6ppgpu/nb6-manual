@@ -1,0 +1,19 @@
+
+Manual for the Nbody6++ code by Sverre Aarseth and Rainer Spurzem.
+------------------------------------------------------------------
+
+Location:  ftp://ftp.ari.uni-heidelberg.de/pub/staff/spurzem/nb6mpi/
+Downloadfile:  nb6manual.tar.gz
+Authors:  Emil Khalisi, Rainer Spurzem
+Last update: 2005, Feb 15
+
+
+In order read the manual, unpack it
+
+   ...>  gzip -d -c nb6manual.tar.gz | tar xvf -
+
+and open the PostScript-file
+
+   ...> gv nb6manual/broschure.ps
+
+

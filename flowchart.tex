@@ -1,0 +1,263 @@
+
+%\section{Flowchart}
+
+\setlength{\oddsidemargin}{-0.3cm}
+\setlength{\evensidemargin}{-0.3cm}
+
+%% New header for the tables.
+\pagestyle{fancy}
+\lhead[\itshape \thepage]{\itshape Flow chart}
+\rhead[\itshape Flow chart]{\itshape \thepage}
+\cfoot{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Define Condition box
+\newsavebox{\nbraute}
+\savebox{\nbraute}(0,0)
+  {
+   \unitlength1cm \thinlines
+   \put(-1.5,0){\line(1,1)  {0.25}}
+   \put(-1.5,0){\line(1,-1) {0.25}}
+   \put (1.5,0){\line(-1,1) {0.25}}
+   \put (1.5,0){\line(-1,-1){0.25}}
+   \put(-1.25,0.25) {\line(1,0){2.5}}
+   \put(-1.25,-0.25){\line(1,0){2.5}}
+  }
+
+
+\noindent
+\begin{center}
+%
+\framebox{
+\unitlength1cm
+\begin{picture}(16,22)
+\thinlines
+%
+% Nbody.F - top level
+\put(6.5,21.0){\framebox[3.0cm]{\tt nbody6.F} }
+\put(8.0,20.8){\line(0,-1){0.3}}
+\put(8.0,20.25){\makebox(0,0){read init. parameters} }
+\put(8.0,20.0){\line(0,-1){0.3}}
+%
+%  kstart=1 - level
+\put(8.0,19.4){\usebox{\nbraute}\makebox(0,0){KSTART = 1 ?} }
+\put(6.5,19.4){\line(-1,0){4.5}}
+\put(6.1,19.5){\makebox(0,0){yes}}
+\put(2.0,19.55){\makebox(0,0){new run}}
+\put(2.0,19.4){\vector(0,-1){0.8}}
+\put(9.5,19.4){\line(1,0){1.5}}
+\put(9.8,19.55){\makebox(0,0){no}}
+\put(11.5,19.55){\makebox(0,0){restart}}
+\put(11.0,19.4){\vector(0,-1){0.8}}
+%
+%  start.F - level
+\put(0.5,18.2){\framebox[3.0cm]{\tt start.F} }
+\put(2.0,18.1){\line(0,-1){0.5}}
+\put(2.0,17.6){\line(1,0){3.0} }
+\put(5.0,17.6){\line(0,-1){0.25} }
+\put(9.5,18.2){\framebox[3.0cm]{\tt mydump.F} }
+\put(11.0,18.0){\line(0,-1){1.05}}
+%
+%  left column of subroutines
+\put(3.5,17.0){\framebox[3.0cm]{\tt zero.f} }
+\put(5.0,16.85){\line(0,-1){0.5} }
+\put(3.5,16.0){\framebox[3.0cm]{\tt input.F} }
+\put(5.0,15.8){\line(0,-1){0.5} }
+\put(3.5,14.95){\framebox[3.0cm]{\tt data.F} }
+\put(5.0,14.8){\line(0,-1){0.5} }
+\put(3.5,13.95){\framebox[3.0cm]{\tt scale.F} }
+\put(5.0,13.8){\line(0,-1){0.5} }
+\put(3.5,12.95){\framebox[3.0cm]{\tt units.f} }
+\put(5.0,12.8){\line(0,-1){0.5} }
+\put(3.5,12.3){\framebox[3.0cm]{\tt xtrln0.f} }
+\put(5.0,12.15){\line(0,-1){0.5} }
+\put(3.5,11.95){\framebox[3.0cm]{\tt binpop.f} }
+\put(5.0,11.8){\line(0,-1){0.5} }
+\put(3.5,10.95){\framebox[3.0cm]{\tt iblock.f} }
+\put(5.0,10.8){\line(0,-1){0.5} }
+\put(3.5,9.95){\framebox[3.0cm]{\tt nblist.f} }
+\put(5.0,9.8){\line(0,-1){0.5} }
+\put(3.5,8.95){\framebox[3.0cm]{\tt fpoly1.f} }
+\put(5.0,8.8){\line(0,-1){0.5} }
+\put(3.5,7.95){\framebox[3.0cm]{\tt fpoly2.f} }
+\put(5.0,7.75){\line(0,-1){0.25} }
+\put(5.0,7.5){\line(-1,0){3.0} }
+%
+%  right column of subroutines
+\put(11.0,16.7){\usebox{\nbraute}\makebox(0,0){KSTART > 2 ?} }
+\put(10.7,16.2){\makebox(0,0){no}}
+\put(11.0,16.45){\line(0,-1){2.0}}
+\put(11.0,14.1){\makebox(0,0){restart without}}
+\put(11.0,13.7){\makebox(0,0){any changes}}
+\put(11.0,13.3){\line(0,-1){9.55}}
+%
+\put(12.5,16.7){\line(1,0){1.5}}
+\put(14.0,16.7){\vector(0,-1){0.9}}
+\put(12.9,16.8){\makebox(0,0){yes}}
+\put(12.5,15.4){\framebox[3.0cm]{\tt modify.F} }
+\put(14.0,15.2){\line(0,-1){0.8}}
+\put(14.0,14.1){\makebox(0,0){restart with}}
+\put(14.0,13.7){\makebox(0,0){some small changes}}
+\put(14.0,13.3){\line(0,-1){9.55}}
+%
+%  adjust.F - level
+\put(2.0,7.5){\line(0,-1){0.45}}
+\put(0.5,6.7){\framebox[3.0cm]{\tt adjust.F} }
+\put(2.0,6.5){\line(0,-1){0.7}}
+\put(0.5,5.45){\framebox[3.0cm]{\tt output.F} }
+\put(2.0,5.25){\line(0,-1){1.5}}
+%
+\put(2.0,3.75){\vector(1,0){4.5}}
+\put(14.0,3.75){\vector(-1,0){4.5}}
+\put(6.5,3.7){\framebox[3.0cm]{\tt intgrt.F} }
+\put(8.0,3.5){\line(0,-1){0.7} }
+%
+\end{picture}
+}%
+%\end{center}
+
+
+%\clearpage
+
+
+%\noindent
+%\begin{center}
+%
+\framebox{
+\unitlength1cm
+\begin{picture}(16,22)
+\thinlines
+%
+\put(5.0,20.8){\line(0,-1){1.0}}
+\put(3.5,19.4){\framebox[3.0cm]{\tt intgrt.F} }
+\put(5.0,19.2){\line(0,-1){0.4}}
+\put(5.0,18.6){\makebox(0,0){Determine group of particles} }
+\put(5.0,18.2){\makebox(0,0){due to be advanced;} }
+\put(5.0,17.8){\makebox(0,0){create list: NXTLST(I)} }
+\put(5.0,17.6){\line(0,-1){0.4}}
+%
+\put(3.5,16.85){\framebox[3.0cm]{\tt short.f} }
+\put(8.3,17.12){\makebox(0,0){create a sublist of} }
+\put(8.3,16.78){\makebox(0,0){shortest times steps} }
+\put(5.0,16.7){\line(0,-1){0.4}}
+%
+\put(5.0,16.05){\usebox{\nbraute}\makebox(0,0){IKS > 0 ?} }
+\put(6.5,16.05){\vector(1,0){1.5} }
+\put(6.8,16.15){\makebox(0,0){yes}}
+\put(9.5,16.05){\makebox(0,0){set IPHASE = 1}}
+\put(11.0,16.05){\line(1,0){1.0} }
+\put(5.0,15.8){\vector(0,-1){0.4}}
+\put(4.7,15.6){\makebox(0,0){no}}
+%
+\put(5.0,15.1){\usebox{\nbraute}\makebox(0,0){TIME > TADJ ?} }
+\put(6.5,15.1){\vector(1,0){1.5} }
+\put(6.8,15.2){\makebox(0,0){yes}}
+%%%\put(8.0,15.05){\framebox[3,0cm]{\tt adjust.F}}
+\put(9.5,15.05){\makebox(0,0){set IPHASE = 3}}
+\put(11.0,15.05){\line(1,0){1.0} }
+\put(5.0,14.85){\vector(0,-1){0.4}}
+\put(4.7,14.65){\makebox(0,0){no}}
+%%%\put(9.5,14.85){\vector(0,-1){0.4}}
+%
+\put(5.0,14.15){\usebox{\nbraute}\makebox(0,0){TIME > TNEXT ?} }
+\put(6.4,14.30){\vector(1,0){1.6} }
+%%%\put(6.5,14.15){\vector(1,0){1.5} }
+\put(6.8,14.35){\makebox(0,0){yes}}
+\put(8.0,14.10){\framebox[3.0cm]{\tt output.F} }
+%%%\put(11.0,14.15){\line(1,0){1.0} }
+\put(8.0,14.05){\vector(-1,0){1.6} }
+\put(5.0,13.9){\vector(0,-1){0.4}}
+\put(4.7,13.7){\makebox(0,0){no}}
+%
+\put(5.0,13.20){\usebox{\nbraute}\makebox(0,0){TIME > TPREV ?} }
+\put(6.4,13.30){\vector(1,0){1.6} }
+\put(6.8,13.40){\makebox(0,0){yes}}
+\put(8.0,13.05){\framebox[3.0cm]{\tt subint.f} }
+\put(8.0,13.05){\vector(-1,0){1.6} }
+\put(5.0,12.95){\vector(0,-1){0.4}}
+\put(4.7,12.75){\makebox(0,0){no}}
+%
+\put(5.0,12.25){\usebox{\nbraute}\makebox(0,0){STEP(I)<DTMIN ?} }
+\put(6.4,12.35){\vector(1,0){1.6} }
+\put(6.8,12.45){\makebox(0,0){yes}}
+\put(8.0,12.10){\framebox[3.0cm]{\tt search.f} }
+\put(8.0,12.10){\vector(-1,0){1.6} }
+\put(5.0,12.00){\vector(0,-1){0.4}}
+\put(4.7,11.80){\makebox(0,0){no}}
+%
+\put(5.0,11.30){\usebox{\nbraute}\makebox(0,0){NXTLEN > 10 ?} }
+\put(6.5,11.30){\line(1,0){3.0} }
+\put(9.5,11.30){\line(0,-1){0.3}}
+\put(6.8,11.40){\makebox(0,0){yes}}
+\put(5.0,11.05){\vector(0,-1){0.5}}
+\put(4.7,10.85){\makebox(0,0){no}}
+%
+\put(3.5,10.15){\framebox[3.0cm]{\tt nbsort.f} }
+\put(5.0,10.05){\line(0,-1){1.1}}
+\put(7.1,10.45){\makebox(0,0){partial}}
+\put(7.1,10.10){\makebox(0,0){predict.}}
+\put(9.5,10.70){\makebox(0,0){prediction of all}}
+\put(9.5,10.35){\makebox(0,0){particles \emph{not}}}
+\put(9.5,10.00){\makebox(0,0){to be corrected}}
+\put(9.5, 9.70){\line(0,-1){0.2}}
+\put(9.5, 9.50){\vector(-1,0){4.5}}
+%
+\put(3.5, 8.6){\framebox[3.0cm]{\tt nbint.f} }
+%\put(9.5, 8.65){\makebox(0,0){correction of neighbour particles} }
+\put(5.0, 8.5){\line(0,-1){0.7}}
+%
+\put(5.0, 7.55){\usebox{\nbraute}\makebox(0,0)%
+                 {$t_{\rm reg}$+$dt_{\rm reg}$=TIME?} }
+\put(6.4, 7.65){\vector(1,0){1.6} }
+\put(6.8, 7.75){\makebox(0,0){yes}}
+\put(8.0, 7.45){\framebox[3.0cm]{\tt regint.f} }
+\put(8.0, 7.40){\vector(-1,0){1.6} }
+\put(5.0, 7.30){\line(0,-1){0.7}}
+\put(4.7, 7.10){\makebox(0,0){no}}
+%
+\put(5.0, 6.4){\makebox(0,0){Update new positions} }
+\put(5.0, 6.1){\makebox(0,0){and velocities} }
+\put(5.0, 5.8){\line(0,-1){0.7}}
+%
+%put(5.0, 4.8){\makebox(0,0){Termination check} }
+\put(5.0, 4.8){\usebox{\nbraute}\makebox(0,0){Termination ?} }
+\put(5.0, 4.5){\line(0,-1){1.8}}
+\put(4.7, 3.0){\makebox(0,0){yes}}
+\put(3.5, 2.3){\framebox[3.0cm]{STOP} }
+\put(5.5, 3.8){\makebox(0,0){no}}
+\put(5.0, 3.6){\vector(1,0){3.8} }
+%
+\put( 8.8, 5.2){\line(0,-1){3.2} }
+\put(10.7, 5.6){\makebox(0,0){Continue acc.~to IPHASE:} }
+\put(10.2, 5.0){\makebox(0,0){1:\hspace{2ex} \tt ksreg.f } }
+\put(10.2, 4.6){\makebox(0,0){2:\hspace{2ex} \tt ksterm.f} }
+\put(10.2, 4.2){\makebox(0,0){3:\hspace{2ex} \tt adjust.f} }
+\put(10.2, 3.8){\makebox(0,0){4:\hspace{2ex} \tt triple.f} }
+\put(10.0, 3.4){\makebox(0,0){5:\hspace{2ex} \tt quad.f} }
+\put(10.1, 3.0){\makebox(0,0){6:\hspace{2ex} \tt merge.f} }
+\put(10.1, 2.6){\makebox(0,0){7:\hspace{2ex} \tt reset.f} }
+\put(10.1, 2.2){\makebox(0,0){8:\hspace{2ex} \tt chain.f} }
+%
+\put(12.0, 5.0){\line(1,0){1.3} }
+\put(12.0, 4.6){\line(1,0){1.3} }
+\put(12.0, 4.2){\line(1,0){1.3} }
+\put(12.0, 3.8){\line(1,0){1.3} }
+\put(12.0, 3.4){\line(1,0){1.3} }
+\put(12.0, 3.0){\line(1,0){1.3} }
+\put(12.0, 2.6){\line(1,0){1.3} }
+\put(12.0, 2.2){\line(1,0){1.3} }
+\put(13.3, 2.2){\line(0,1){17.3} }
+\put(13.3,19.5){\vector(-1,0){6.8} }
+%
+%
+%
+\put(12.0,16.0){\line(0,-1){9.6} }
+\put(12.0, 6.4){\line(-1,0){4.5} }
+\put(7.5, 6.4){\vector(0,-1){2.8} }
+%
+
+\end{picture}
+}%
+\end{center}
+
