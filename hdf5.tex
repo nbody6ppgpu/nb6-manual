@@ -67,13 +67,15 @@ Data Content Binaries: (all vectors of dimension N_BINARY):
 154-157: A,ECC,P,G: semi-major axis in a.u., eccentricity,period in days, external gravitational perturbation
 158-160: KW1-2, cm KW: stellar types, binary type
 161-163: Name1-2, cm Name: names of binary components, name of c.m.
+176: LAB: cm Label; =1 for KS binary; =0 for soft binary; =-1 for special binary
 164-165: ASPN1-2: dimensionless spins of binary members
 166-167: TEV1-2:  next stellar evolution time (N-body units)
 168-169: TEV01-2: last stellar evolution time (N-body units)
 170-171: EPOCH1-2: formation time of star (Myr); AGE = TEV0()*TSTAR-EPOCH()
 172-173: ZMETA1-2: individual metallicity of star (not yet supported)
 174-175: NPOPU1-2: population index of star (not yet supported)
-176-189: 1-2: XMNS0, BMAG0, BMAG, AGE0, AGEX, PERIOD, PDOT, reserved for new pulsar treatment (not yet supported)
+176: NB_LAB: index of binary (KS=1, soft = 0, special = -1)
+177-190: 1-2: XMNS0, BMAG0, BMAG, AGE0, AGEX, PERIOD, PDOT, reserved for new pulsar treatment (not yet supported)
 
 Contents of MERGER subgroup: not yet analyzed, mostly empty, may be absorbed into BINARY group in the future. 
 \end{lstlisting}

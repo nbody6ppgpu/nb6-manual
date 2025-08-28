@@ -114,7 +114,7 @@
     \multicolumn{2}{|c|}{ For stars } \\\hline
     I     & Index of star (position in particle data array) \\\hline
     NAME  & Identification of individual star, it's constant and unique value for each star (exclude un-physical particles like center mass and ghosts) during the whole simulation \\\hline
-    K*    & KSTAR type:   \\
+    K*    & KSTAR type for single stars:   \\
           &-1: Pre-main sequence. \\
           & 0: Low main sequence (M < 0.7). \\
           & 1: Main sequence. \\
@@ -132,6 +132,15 @@
           &13: Neutron star. \\
           &14: Black hole. \\
           &15: Massless supernova remnant. \\\hline
+    K*    & KSTAR type for binary c.m.:   \\
+          &  0: standard, nothing special \\
+          &  10: 1st mass transfer \\
+          &  11: after mass transfer \\
+          &  even number $\ge$ 10: subsequent phases of mass transfer \\
+          &  odd number $\ge$ 11: subsequent phases after mass transfer \\
+          &  -25: relativistic binary shrinking due to GW emission    \\
+          & (note negative value is needed, because condition KSTAR $\ge$ 10 is reserved for binaries with mass transfer)
+          \\\hline
     M     & Mass of star \\\hline
     X(1:3)& Three dimension position \\\hline
     V(1:3)& Three dimension velocity \\\hline
@@ -272,13 +281,13 @@ Table\ref{tb:main} show all output files of \textit{NBODY6++}. The filename will
   \label{tb:main}
   \\\hline
     name   & unit & code & option  & freq.   & content \\\hline\hline
-    conf*  & 3    & output.F   & $\#3>0$ & $\Delta T_{out}$ $\times$ NFIX  &  Basic data snapshots \\\hline
-\multicolumn{2}{|c|}{ Header-1 } & \multicolumn{4}{|p{4.4in}|}{ NTOT, MODEL, NRUN, NK  }\\\hline
-\multicolumn{2}{|c|}{ Header-2 } & \multicolumn{4}{|p{4.4in}|}{ TIME[NB], NPAIRS, RBAR, ZMBAR, RTIDE, TIDAL4, RDENS(1:3), TIME/TCR, TSCALE, VSTAR, RC, NC, VC, RHOM, CMAX, RSCALE, RSMIN, DMIN1 }\\\hline
-\multicolumn{2}{|c|}{ N-Label } & \multicolumn{4}{|p{4.4in}|}{ M, RHO, XNS, X(1:3), V(1:3), POT, NAME (All in NB unit)}\\\hline
-\multicolumn{6}{|p{5.4in}|}{ Notice the file is unformatted (binary file). Each item output continually from 1 to NTOT. All items output in one line after two header lines.}\\
+    conf*  & 3    & output.F   & $\#3>0$ & $\Delta T_{out}$ $\times$ NFIX  &  Basic data snapshots, all in REAL*4 data type \\\hline
+\multicolumn{2}{|c|}{ Header Record } & \multicolumn{4}{|p{4.4in}|}{ NTOT, MODEL, NRUN, NK  }\\\hline
+\multicolumn{2}{|c|}{ Data Record } & \multicolumn{4}{|p{4.4in}|}{ AS, M, RHO, XNS, X(1:3), V(1:3), POT, NAME (All in NB unit)}\\\hline
+\multicolumn{2}{|c|}{ Scalars } & \multicolumn{4}{|p{4.4in}|}{ All contained in vector AS, dimension NK: TTOT, NPAIRS, RBAR, ZMBAR, RTIDE, TIDAL4, RDENS(1:3), TIME/TCR, TSCALE, VSTAR, RC, NC, VC, RHOM, CMAX, RSCALE, RSMIN, DMIN1 . Note that integers NPAIRS, NC have been transformed to REAL type.}\\\hline
+\multicolumn{6}{|p{5.4in}|}{ Notice the file is unformatted (binary file). Each output contains the two records (Header, Data), dimensions NK and NTOT of the vectors. }\\
 \multicolumn{6}{|p{5.4in}|}{ Python package \texttt{struct}\footnote{https://docs.python.org/3/library/struct.html} can be used for extracting these values from the file.}\\
-\multicolumn{6}{|p{5.4in}|}{    NK :  The number of parameters in Header-2, right now is always 20} \\
+\multicolumn{6}{|p{5.4in}|}{    NK :  The number of parameters in AS vector, right now is always 20} \\
 \multicolumn{6}{|p{5.4in}|}{    TCR :  Crossing time} \\
 \multicolumn{6}{|p{5.4in}|}{    RSMIN : Smallest neighbor radius obtained in last output (output.F) time }\\
 \multicolumn{6}{|p{5.4in}|}{    DMIN1 :  Smallest two body distance } \\

@@ -1,0 +1,175 @@
+% Rainer Spurzem August 2025
+\section{Event Data Bank}
+
+Inspired by MOCCA several files are written (if KZ(50)=1) containing formatted data about all kinds of events related to dynamics, single, and binary stellar evolution, with high time resolution. It is intended for very large production runs, which cannot be repeated frequently, such that most if not all useful data is preserved. This will probably remain a construction and optimization topic for a while. Note that this new component is currently in a special github sub-branch called \_event\_bank\_dev :
+\bigskip\noindent
+
+\noindent\url{https://github.com/nbody6ppgpu/Nbody6PPGPU-beijing/tree/_event_bank_dev}
+\bigskip\noindent
+
+\noindent Note also that some output in the main output listing (stdout, unit 6) has been adjusted to be more consistent with the event data files output (those changes are already included in the main github, not only in \_event\_bank\_dev ).
+\bigskip
+
+\noindent Here is the current list of additional data files we have:
+
+\begin{longtable}{@{}p{1.5cm} p{3.0cm} p{3.0cm} p{5.0cm}}
+\caption{\texttt{New data files created for Event Data Bank}}
+\label{table:ininput1}\\\hline
+File Name & Description & Routine & Comment \\\hline
+%
+xrb.203  & X-ray binaries & roche.f & Start/End/Coal \\
+pulsar.204 & pulsars & ?  & to be done \\
+ks.210 & ks binaries & kspinit.F ksinit.F subint.F ksterm.F & NEW / END KSREG, and type change or DM>5\% \\
+wdnsbh.211 & wd, ns, bh formation & mdot.F & \\
+compb.212 & wd, ns, bh binary & ksinit.F & only formation printed \\
+bmdot.220 & binary    & mdot.F & probably too many lines \\
+smdot.221 & single    & mdot.F & probably too many lines \\
+gwkick.230 & single    & kick.F & kicks at remnant formation \\
+bkick.231 & binary    & kick.F kickGW.f & GW binary kicks \\
+chain.240 & chain     &  impact.f chterm.f & NEW / END CHAIN work in progress \\
+chain.241 & chain     & chain.f & stepwise output for chain data \\
+\hline
+
+\end{longtable}
+
+This is a starting point, some data may be overlapping, and the structure may be adjusted in the future. In the following all write statements with format are listed; more detailed informations about the meaning of the quantities will follow later. 
+
+\subsection{xrb.203 ; roche.f }
+\begin{verbatim}
+     &           WRITE (203,61) WHICH,TTOT,NAME(J1),NAME(J2),
+     &            NAME(I),KW1,KW2,KSTAR(I),
+     &            IPAIR,DTAU(IPAIR),BODY(J1),BODY(J2),R(IPAIR),
+     &            ECC,SEMI,EB,TK,H(IPAIR),GAMMA(IPAIR),
+     &            SPIN(J1),SPIN(J2),XOSPN1,XOSPN2,SPNFAC,JORB,OORB,
+     &            STEP(I),LIST(1,J1),LIST(1,I),
+     &            MASS0(1:2),MASS(1:2),MASSC(1:2),RI,VI,R(IPAIR)*SU,
+     &            RAD(1),RAD(2),LUM_TMP(1),LUM_TMP(2),MASSC(1),MASSC(2),
+     &            RCC_TMP(1),RCC_TMP(2),MENV(1),MENV(2),RENV(1),RENV(2),
+     &            OSPIN(1),OSPIN(2),DMA(1),DMA(2),DMR(1),DMR(2),ROL(1),
+     &            ROL(2),DMA(1)-DMR(1),DMA(2)-DMR(2),DM1,DM2,TB,Lx,
+     &            Mdot_RLOF,BMAG(1),BMAG(2)
+\end{verbatim}
+ Note: that magnetic field is added, even though it is not yet implemented for pulsars. Also spins and initial masses added (Aug. 10).
+
+\subsection{pulsar.204; ? }
+\begin{verbatim}
+                WRITE(204,..)
+\end{verbatim}
+to be implemented later.
+
+\subsection{ks.210 ; kspinit.F ksinit.F subint.F ksterm.F }
+\begin{verbatim}
+               WRITE(210,61) TIME+TOFF,DEB1,DEB2,IKW1,IKW2,NAME(I1),
+     &             NAME(I2),NAME(ICM),KSTAR(I1),KSTAR(I2),KSTAR(ICM),
+     &             IPAIR,DTAU(IPAIR),BODY(I1),BODY(I2),
+     &             R(IPAIR),SQRT(ECC2),SEMI,EB,PD,H(IPAIR),GAMMA(IPAIR),
+     &             STEP(ICM),LIST(1,I1),LIST(1,ICM),
+     &             BODY(I1)*ZMBAR,BODY(I2)*ZMBAR,
+     &             RADIUS(I1)*SU,RADIUS(I2)*SU,R(IPAIR)*SU,RI,VII,
+     &             R1XY,R1INC,R1PHI,V1XY,V1INC,V1PHI,
+     &             R2XY,R2INC,R2PHI,V2XY,V2INC,V2PHI
+ 61       FORMAT(' NEW_KSREG ',1P,E17.9,2E13.5,2I4,3I10,3I4,I9,
+     &                         11E17.9,2I5,19E17.9)
+ \end{verbatim}
+
+ "NEW KSREG" "END KSREG" ; intermediate information printed if any member of binary has mass change of more than 5\% or a type change. To recover this after a restart the 
+
+\subsection{wdnsbh.211 ; mdot.F }
+ \begin{verbatim}
+       WRITE (211,63)TIME+TOFF,I, K, NAME(I), KSTAR(I), KW, AGE,AGEOLD,
+     &      BODY(I)*ZMBAR,MASS(K), M0, M1, RADIUS(I)*SU, VI, RI, RCC, MC
+   63   FORMAT(' WD/NS/BH FORMATION ',1P,E17.9,3I10,2I4,12E13.5)
+ \end{verbatim}
+
+ Extra output to record only formation of compact object (wd, ns, bh); may be redundant to other outputs here.
+
+\subsection{compb.212 ; ksinit.F }
+ \begin{verbatim}
+          WRITE (212,62)  TIME+TOFF,NAME(ICOMP),NAME(JCOMP),
+     &         NAME(NTOT),KSTAR(ICOMP),KSTAR(JCOMP),KSTAR(NTOT),
+     &         IPAIR,DTAU(IPAIR),BODY(ICOMP),BODY(JCOMP),
+     &         R(IPAIR),SQRT(ECC2),SEMI,EB,PD,H(IPAIR),GAMMA(IPAIR),
+     &         STEP(NTOT),LIST(1,ICOMP),LIST(1,NTOT),
+     &         BODY(ICOMP)*ZMBAR,BODY(JCOMP)*ZMBAR,
+     &         RADIUS(ICOMP)*SU,RADIUS(JCOMP)*SU,R(IPAIR)*SU,RI,VII,DEB
+   62       FORMAT(1X,1P,E17.9,3I10,3I4,I9,11E17.9,2I5,8E17.9)
+\end{verbatim}
+ Extra output to record only formation of binary with compact object (wd, ns, bh); may be redundant to other outputs here.
+
+
+\subsection{bmdot.220 ; mdot.F }
+ \begin{verbatim}
+                WRITE(220,61) TIME+TOFF,DEB1,DEB2,IKW1,IKW2,I,NAME(I1),
+     &             NAME(I2),NAME(ICM),KSTAR(I1),KSTAR(I2),KSTAR(ICM),
+     &             IPAIR,DTAU(IPAIR),BODY(I1),BODY(I2),
+     &             R(IPAIR),SQRT(ECC2),SEMI,EB,PD,H(IPAIR),GAMMA(IPAIR),
+     &             STEP(ICM),LIST(1,I1),LIST(1,ICM),
+     &             BODY(I1)*ZMBAR,BODY(I2)*ZMBAR,
+     &             RADIUS(I1)*SU,RADIUS(I2)*SU,R(IPAIR)*SU,RI,VII
+ 61       FORMAT('  BIN_MDOT ',1P,E17.9,2E13.5,2I4,4I10,3I4,I9,
+     &                         11E17.9,2I5,13E17.9)
+ \end{verbatim}
+
+ status of binary if mass change of member is more than 5\% or a type change has occurred. 
+
+\subsection{smdot.221 ; mdot.F }
+ \begin{verbatim}
+                  WRITE(221,62) TIME+TOFF,DEB1,DEB2,IKW1,IKW2,I,NAME(I),
+     &             KSTAR(I),BODY(I),LIST(1,I),BODY(I)*ZMBAR,
+     &             RADIUS(I)*SU,RI,VII
+   62      FORMAT(' SING_MDOT ',1P,E17.9,2E13.5,2I4,3I10,E17.9,I10,4E17.9)
+ \end{verbatim}
+
+ status of single star if mass change is more than 5\% or a type change has occurred. 
+
+\subsection{ gwkick.230 ; kick.F }
+ \begin{verbatim}
+       WRITE(230,60)WHICH1,WHICH2,ICASE,TTOT,I,NAME(I),KSTAR(I),KW,KC,
+     &         KMECH,TTOT*TSTAR,BODY0(I)*ZMBAR,ZM,
+     &         ASPN(I),XJSPIN,SPNFAC,SQRT(VI2)*VSTAR,
+     &         VKICK*VSTAR, SQRT(VF2)*VSTAR, VK(4),FBFAC,FBTOT,
+     &         X(1:3,I)*RBAR, XDOT(1:3,I)*VSTAR
+   60 FORMAT(2A10,I2,1P,E17.9,2I10,4I4,18E17.9)
+ \end{verbatim}
+
+ single star kicks at remnant formation recorded with full information (masses, spins, 3d positions and velocities, and more)
+
+\subsection{ bkick.231 ; kick.F kickGW.f }
+ \begin{verbatim}
+       WRITE(231,61)WHICH,ICASE,TTOT,I1,I2,NAME(I1),NAME(I2),
+     &        KSTAR(I1),KSTAR(I2),KW,KC,BODY0(I1)*ZMBAR,BODY0(I2)*ZMBAR,
+     &        ZM1,ZM2,VESC,VDIS,R(IPAIR)/SEMI,EB,R(IPAIR),
+     &        ASPN(I1),ASPN(I2),QR,XJSPIN1,XJSPIN2,SPNFAC,
+     &         X(1:3,I1)*RBAR, XDOT(1:3,I1)*VSTAR,
+     &         X(1:3,I2)*RBAR, XDOT(1:3,I2)*VSTAR
+   61 FORMAT(A15,I2,1P,E17.9,4I10,4I4,27E17.9)
+ \end{verbatim}
+
+binary kicks with full information (masses, spins, 3d positions and velocities, and more)
+
+\subsection{ chain.240 ; impact.f chterm.f }
+ \begin{verbatim}
+             WRITE(240,66) WHICH1, NCH, TTOT, I, JCOMP, IPAIR, NAME(I1),
+     &      NAME(I2), NAME(JCOMP), NAME(I), KSTAR(I1), KSTAR(I2),
+     &      KSTAR(JCOMP), KSTAR(I), BODY(I1), BODY(I2), BODY(JCOMP),
+     &      BODY(I)+BODY(JCOMP),R(IPAIR),H(IPAIR),ECC,SEMI,EB,PD,
+     &      ECC1,SEMI1,EB1,PD1,PERT4, RIJ, PMIN, EB1/EB, LIST(1,I1),
+     &      BODY(I1)*ZMBAR,BODY(I2)*ZMBAR,BODY(JCOMP)*ZMBAR,
+     &      (BODY(I)+BODY(JCOMP))*ZMBAR,RADIUS(I1)*SU,RADIUS(I2)*SU,
+     &      RADIUS(JCOMP)*SU,R(IPAIR)*SU,RIJ*SU,RI,VI,
+     &      XX(1:3,1),XX(1:3,2),XX(1:3,3),VV(1:3,1),VV(1:3,2),VV(1:3,3)
+ 66       FORMAT('  NEW ',A8,I4,1P,E17.9,7I10,4I4,18E17.9,I5,29E17.9)
+ \end{verbatim}
+
+"NEW CHAIN" (if from impact.f) and "END CHAIN" (chterm.f), no intermediate information.
+
+\subsection{ chain.241 ; chain.f }
+ \begin{verbatim}
+            WRITE(241,61)WHICH,NSTEP1,TIMENB,TIMEC,T0S(ISUB)+TIMEC,
+     &          TMAX-TIMEC,(K,NAMEC(K),M(K),SIZE(K),RSEP(K),
+     &           VSEP(K),SEMICH(K),ECCCH(K),TGRCH(K),A_EIN(K),K=1,N-1),
+     &           N,NAMEC(N),M(N),SIZE(N)
+  61        FORMAT(A8,I10,1P,4D17.9,10(I4,I10,8D17.9))
+ \end{verbatim}
+
+Intermediate information for every NSTEP (difsy call). This had to separated, because inside chain the standard common blocks for particle data are not available. Note that chain output is currently most experimental, it may produce too much output if we have many multiples or hierarchies, and it currently has been only tested for three body chains.

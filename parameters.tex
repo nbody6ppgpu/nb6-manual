@@ -5,8 +5,19 @@ The parameters described in the following tables are currently compiled into the
 
 Routines \texttt{kick.F, coal.f, mydump.F} changed, there is a new routine \texttt{kickGW.f} and a new common block \texttt{/REL/} with scalar spin vector \texttt{ASPN}.
 
-From \texttt{kick.F} comment lines and Manuel personal communication:
+For black holes the kick choice is controlled by three input parameters: 
+\texttt{BHFLAG} (input block SSE, routine kick.F), \texttt{BHSPINFL} (input block BSE, file kick.F, subroutine SPINFLAG), and \texttt{kicktype} (input block BSE, routine kickGW.F). (Note that  \texttt{BHSPINFL} should logically belong to SSE, but for some unknown reason it is in BSE).
+
+From \texttt{kick.F} comment lines:
 \begin{lstlisting}[breaklines]
+* For BHs the kick choice is controlled by the value of BHFLAG.
+* Choices are:
+*    BHFLAG = 0 - no kick
+*    BHFLAG = 1 - same as for the regular NSs
+*    BHFLAG = 2 - same as for the regular NSs but scaled by fallback.
+*    NOTICE: former BHFLAG = 3 and 4 (natal spins from Geneva or MESA models, Sambaran Banerjee)
+*            are now treated by the new flag BHSPINFL, see below.
+* [...]
 *  M.A.S. MAS Manuel Arca Sedda 03 Nov 2021
 *  Added a BH spin flag (BHSPINFL) to select BH natal spins
 *     BHSPINFL = 0 - zero spins
@@ -17,7 +28,11 @@ From \texttt{kick.F} comment lines and Manuel personal communication:
 *     BHSPINFL = 5 - Mesa models (implemented by Sambaran) *
 *  A new vector in common6.h has been defined, named
 *     ASPN(NMAX)
+\end{lstlisting}
 
+The input parameter kicktype (input block BSE) is used in kickGW.F routine. So far no comments in the code. Note that the default is -2; if you want a different value it has to set explicitly in the input file. Note that for stellar evolution level 'C' the following defaults are used:  \texttt{BHFLAG=2} , \texttt{BHSPINFL = 0} , \texttt{kicktype = -2}; if you want a different value it has to set explicitly in the input file, input blocks SSE and BSE.
+
+\begin{lstlisting}
 kicktype == -2 corresponds to zero recoils
 kicktype == -1 corresponds to Vkick = 10^4 km/s
 kicktype == 0  uses a fitting formula for BHs with spin < 0.01

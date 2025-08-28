@@ -52,11 +52,11 @@ The simple way to use configure is just type {\tt ./configure}, but normally, yo
     \textcolor{red}{\protect{\tt  ./configure -{}-enable-hdf5}}
 
     \textcolor{red}{it is currently not functioning!} To use hdf5 manual editing of {\tt build/Makefile} is needed (two options {\tt HDF5\_FLAGS} and {\tt FFLAGS} to be changed. An example is in {\tt build/Makefile.save.hdf5}, which assumes that you or your system has defined in {\tt HDF5\_DIR} the location of HDF5 libraries and include files. If you have {\tt modules} installed, make sure a module of {\tt hdf\_serial} is  loaded, standard parallel HDF5 is not supported. The order of action is {\tt configure}, edit {\tt Makefile}, {\tt make}. Every new {\tt configure} will overwrite {\tt Makefile}, so you have to do the editing again or keep a safe copy.
-    \textcolor{blue}{On a normal desktop/pc, you can try the following:\\
+    \textcolor{blue}{On a normal desktop/pc/workstation, you can try the following:\\
     You need to edit manually the file build/Makefile, AFTER configuration, using:\\
 HDF5\_FLAGS = -D H5OUTPUT -I/usr/include/openmpi-x86\_64/ -L/usr/lib64/openmpi/lib/ -lhdf5\_fortran \\
 FFLAGS = .... \$\{HDF5\_FLAGS\}\\
-Otherwise, you can use a defined path that should work anytime:\\
+Otherwise, you can use a defined path in your shell. Note that you need to define it most of the times (unless it is defined by administrators). Normally in supercomputers there is a module that integrates a certain package, so be sure to ask the local administrators the right one for the hdf5 files. Once defined, you can simply use:\\
 HDF5\_FLAGS = -D H5OUTPUT -I\$(HDF5\_DIR)/include/ -L\$(HDF5\_DIR)/lib/ -lhdf5\_fortran\\
 FFLAGS = .... \$\{HDF5\_FLAGS\}}
 

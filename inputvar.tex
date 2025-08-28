@@ -151,7 +151,7 @@ NRAND   & Random number seed; any positive integer \\
 %          (< LMAX$-$5) set in \texttt{params.h}\\
 NNBOPT  & Desired optimal neighbour number (< LMAX$-$5)\\ %(R.Sp.)
 NRUN    & Run identification index\\
-NCOMM   & Multiplicator for frequency to store the dumping data (mydump); positive integer; basic frequency determined by DELTAT \\
+NCOMM   & Multiplicator for frequency to store the dumping data (mydump); positive integer; basic frequency determined by DTADJ \\
 \end{longtable}
 
 \hrule
@@ -163,10 +163,10 @@ NCOMM   & Multiplicator for frequency to store the dumping data (mydump); positi
 ETAI    & Time--step factor for irregular force polynomial\\
 ETAR    & Time--step factor for regular force polynomial\\
 RS0     & Initial guess for all radii of neighbour spheres ($N$--body units)\\
-DTADJ   & Time interval for parameter adjustment and energy check ($N$--body units) \\
+DTADJ   & Time interval for parameter adjustment and energy check ($N$--body units). In a good practice, DTADJ should be the same as, or larger than, DELTAT. \\
 %%          (in TCR if KZ(35)=0, otherwise in $N$-body units)\\
 DELTAT  & Time interval for writing output data and diagnostics,
-          multiplied by NFIX ($N$--body units)\\
+          multiplied by NFIX ($N$--body units).\\
 %%        & -- in units of $t_{\rm cr}$ if KZ(35) = 0;\\
 %%$        & -- in scaled units if KZ(35) > 0.\\
 %%        & for DTADJ=DELTAT (recommended) output data is written every
@@ -248,26 +248,27 @@ KZ(13)  & Interstellar clouds \\
         & $=1$: constant velocity for new cloud\\
         & $>2$: Gaussian velocity for new cloud\\
 KZ(14)  & External tidal force \\
+        & $=0$: no external tidal field\\
         & $=1$: standard solar neighbor tidal field\\
         & $=2$: point-mass galaxy with circular orbit (extra input) \\
         & $=3$: point-mass + disk + halo + Plummer (extra input) \\
         & $=4$: Plummer model (extra input) \\
         & $=5$: Milky-Way potential (extra input) based on Galpy package (Bovy, 2015) \\
         & Note: Namelist input has all fields for values 2,3,4, but user must take care to put proper values \\
-KZ(15)  & Triple, quad, chain and merger search \\
+KZ(15)  & Triple, quad, chain and merger search. Note that \textit{triple} and \textit{quad} in KZ(15) means unperturbed triple and quad systems. \\
         & $\ge 1$: Switch on triple, quad, chain (KZ(30)>0) and merger search (\texttt{impact.f}) \\
         & $\ge 2$: Diagnostics at main output at begin and end of triple, quad \\
         & $\ge 3$: Save first five outer orbits every half period of wide quadruple before merger and stable quadruples accepted for merger in \texttt{quastab.89} \\
-KZ(16)  & Auto-adjustment of regularization parameters \\
+KZ(16)  & Auto-adjustment of regularization parameters. WARNING: not tested for large $N$ ($N>10^5$) systems with large mass range. \\
         & $\ge 1$: Adjust RMIN, DTMIN \& ECLOSE every DTADJ time \\
         & $\ge 3$: modify RMIN for GPERT > $0.05$ or < $0.002$ in chain; output diagnostics at \texttt{kscrit.77} \\
-KZ(17)  & Auto-adjustment of ETAI, ETAR and ETAU by tolerance QE every DTADJ time (\texttt{check.f}) \\
+KZ(17)  & Auto-adjustment of ETAI, ETAR and ETAU by tolerance QE every DTADJ time (\texttt{check.f}). WARNING: not tested for large $N$ ($N>10^5$) systems with large mass range. \\
         & $\ge 1$: Adjust ETAI, ETAR \\
         & $\ge 2$: Adjust ETAU \\
 KZ(18)  & Hierarchical systems \\
         & $=1,3$: diagnostics (\texttt{hiarch.f})\\
         & $\ge 2$: Initialize primordial stable triples, number is NHI0 (\texttt{hipop.F}) \\
-        & $\ge 4$: Data bank of stable triple, quad in \texttt{hidat.87} (\texttt{hidat.f}) \\
+        & $\ge 4$: Data bank of \textit{hierarchical} stable triple, quad in \texttt{hidat.87} (\texttt{hidat.f}) \\
 KZ(19)  & Stellar evolution and mass loss scheme \\
         & $=0$: if KZ(12)$=-1$, the output data will keep the input data unit if KZ(22)$=2-4$ or $N$-body units if KZ(22)$=6-10$\\
         & $=1,2$: supernova scheme \\
@@ -342,7 +343,7 @@ KZ(27)  & Two-body tidal circularization (Mardling \& Aarseth, 2001; Portegies Z
         & $=3$: GR energy loss with sequential tides\\
         & $=4$: GR energy loss with chaos tides \\
         & $=-1$: Only detect collision and suppress coalescence \\
-KZ(28)  & Magnetic braking. \rs{Gravitational radiation for NS or BH binaries is diabled here, since it is treated with KZ(27) now.}. \\
+KZ(28)  & Magnetic braking. Gravitational radiation for NS or BH binaries is diabled here, since it is treated with KZ(27) now. \\
         & $\ge 1$: magnetic braking for NS \& BH (\texttt{brake.f}, \texttt{brake3.f})\\
         & $\ge 2$: Diagnostics at main output (\texttt{brake.f}) \\
         & $=3$: Input of ZMH = 1/SQRT(2*N) (Need KZ(5)$\ge$6) (\texttt{setup.F}) \\
@@ -403,7 +404,7 @@ KZ(47)  &  Frequency for KZ(46) output. Should be non-negative integer. \\
         &  Output data with time interval $0.5^{KZ(47)} \times SMAX$ \\
 KZ(48)  & $=0,1$: if 1 reduced HDF5 output (no 2nd and 3rd derivatives of force); warning: if KZ(40)=0 initial values wrong, undefined. \\
 KZ(49)  & was used for ellan.f call in output, changed to KZ(45) \\
-KZ(50)  & For unperted KS binary. The neighbor list is searched for finding next KS step. It is safer to get correct step but not efficient when unperted binary number is large. To suppress this, set to $1$ \\
+KZ(50)  & For event data bank, similar to MOCCA. Uses file units with numbers above 200; still under development; to switch on set to 1. \\
 
 \end{longtable}
 
@@ -522,8 +523,8 @@ VG(1:3) & Initial cluster velocity vector (km/s). Note that upon restart, VG is 
 \caption{\texttt{Input of \&INBINPOP, binpop.F, \\\phantom{xxxxxxxx}if (kz(8)=1 or kz(8)>2)}}
 \label{table:inbinpop}\\\hline
 %
-SEMI   & Initial semi-major axis limit\\
-ECC    & Initial eccentricity \\
+SEMI0   & Initial semi-major axis limit\\
+ECC0    & Initial eccentricity \\
         & $<0$: thermal distribution, $f(e)=2e$ \\
         & $\ge 0$ and $\le 1$: fixed value of eccentricity\\
         & $=20$: uniform distribution \\
