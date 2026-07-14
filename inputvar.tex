@@ -277,12 +277,12 @@ KZ(19)  & Stellar evolution and mass loss scheme \\
         & $=2,4$: input stellar parameters from \texttt{datsev.21}; 
                   read by (\texttt{instar.f}): \\
                 & N lines of (MI, KW, M0, EPOCH1, OSPIN, MC); N is the number of particles in \texttt{datsev.21} and \texttt{dat.10} and has to be set accordingly in Nbody input file. \\
-                & ~~~~~~   MI: current mass \\
+                & ~~~~~~   MI: current mass (solar mass) \\
                 & ~~~~~~   KW: stellar type \\
-                & ~~~~~~   M0: initial mass \\
+                & ~~~~~~   M0: initial mass (solar mass) \\
                 & ~~~~~~   EPOCH1: evolved age of star (AGE $= -$ EPOCH1 [Myr]) \\
                 & ~~~~~~   OSPIN: angular velocity of star (may be zero if not relevant) \\
-                & ~~~~~~   MC: core mass (may be zero if not relevant) \\
+                & ~~~~~~   MC: core mass (solar mass, may be zero if not relevant) \\
         & $=4$: Take input data from other code (e.g. Monte Carlo); \\ 
         & first line of \texttt{datsev.21} in this case read by \texttt{start.F} to establish desired scaling: \\
                 & 1 line of (TMOC,NZERO,RBAR,ZMBAR,TSTAR) \\ 
