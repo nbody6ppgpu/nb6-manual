@@ -1,8 +1,7 @@
 # Nb6manual
 
 Canonical source for the NBODY6++GPU LaTeX manual. This GitHub repository
-(`origin`, currently `kaiwu-astro/nb6-manual`, will be transferred to
-`nbody6ppgpu/nb6-manual`) is the canonical copy of the manual source.
+(`origin`, `nbody6ppgpu/nb6-manual`) is the canonical copy of the manual source.
 
 The Overleaf project (`overleaf` remote,
 `https://git.overleaf.com/61a0b9dc74d7e9276e99ea39`) is the human editing
@@ -42,6 +41,3 @@ stops on the first conflict.
 The NBODY6++GPU code repository consumes this manual as a git submodule
 pinned to a specific commit (see that repo's `doc/` directory once the
 submodule is wired up).
-
--- File Francesco is changing: output_unit.tex
--- File Qi is changing: 

@@ -95,8 +95,8 @@ More details of configure options can be found by using:\\
 
 \protect{\tt ./configure -{}-help} \\
 
-Then the configure script will check your system environments to find avaiable compilers, make decision for several features like CUDA, SIMD and HDF5 (enable HDF5 is outdated at this time, please check Section XXX for more info).
-In this simple example, if all checking pass successfully, there will be a summary showing the name of excutable file (nbody6++.**), the supported features and basic parameters for simulation (\texttt{NMAX}, \texttt{KMAX}, \texttt{LMAX},\texttt{MMAX}). Here \texttt{NMAX} is the maximum number of particles, \texttt{KMAX} is the maximum number of KS pairs, \texttt{LMAX} is the maximum neighbor number and \texttt{MMAX} is the maximum merger number ($\ge 3$ bodies stable hierarchical system).
+Then the configure script will check your system environments to find available compilers, make decision for several features like CUDA, SIMD and HDF5. Enabling HDF5 is strongly recommended (see Chapter~\ref{ch:hdf5} for details); the ANSI output mode, i.e.\ running with HDF5 disabled, is no longer maintained.
+In this simple example, if all checking pass successfully, there will be a summary showing the name of executable file (nbody6++.**), the supported features and basic parameters for simulation (\texttt{NMAX}, \texttt{KMAX}, \texttt{LMAX},\texttt{MMAX}). Here \texttt{NMAX} is the maximum number of particles, \texttt{KMAX} is the maximum number of KS pairs, \texttt{LMAX} is the maximum neighbor number and \texttt{MMAX} is the maximum merger number ($\ge 3$ bodies stable hierarchical system).
 
 \subsection*{Make}
 
