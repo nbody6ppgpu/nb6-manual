@@ -1,0 +1,88 @@
+# Bidirectional sync between this repo's main branch and the Overleaf
+# project's master branch.
+#
+# On conflict: the merge is aborted and the job fails. Nothing is
+# auto-resolved or overwritten on either side. To resolve by hand:
+#   git fetch overleaf && git merge overleaf/master
+# then push the resolution to both origin/main and overleaf/master.
+
+name: Sync manual with Overleaf
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: overleaf-sync
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Add Overleaf remote
+        env:
+          OVERLEAF_GIT_TOKEN: ${{ secrets.OVERLEAF_GIT_TOKEN }}
+          OVERLEAF_PROJECT_ID: ${{ vars.OVERLEAF_PROJECT_ID }}
+        run: |
+          echo "::add-mask::${OVERLEAF_GIT_TOKEN}"
+          git remote add overleaf "https://git:${OVERLEAF_GIT_TOKEN}@git.overleaf.com/${OVERLEAF_PROJECT_ID}"
+
+      - name: Pull from Overleaf
+        run: |
+          START_SHA="$(git rev-parse HEAD)"
+          echo "start_sha=${START_SHA}" >> "$GITHUB_ENV"
+
+          git fetch overleaf master
+          FETCH_SHA="$(git rev-parse FETCH_HEAD)"
+          echo "fetch_sha=${FETCH_SHA}" >> "$GITHUB_ENV"
+
+          if ! git merge --no-edit FETCH_HEAD; then
+            git merge --abort
+            echo "::error::Merge conflict between main and overleaf/master." \
+                 "Resolve locally: git fetch overleaf && git merge overleaf/master," \
+                 "then push the resolution to both origin/main and overleaf/master."
+            exit 1
+          fi
+
+      - name: Push to GitHub
+        run: |
+          END_SHA="$(git rev-parse HEAD)"
+          if [ "${END_SHA}" != "${start_sha}" ]; then
+            git push origin HEAD:main
+          else
+            echo "No new commits from Overleaf; skipping push to origin."
+          fi
+
+      - name: Push to Overleaf
+        run: |
+          END_SHA="$(git rev-parse HEAD)"
+          if [ "${END_SHA}" = "${fetch_sha}" ]; then
+            echo "No new commits from GitHub; skipping push to overleaf."
+            exit 0
+          fi
+
+          for attempt in 1 2 3; do
+            if git push overleaf HEAD:master; then
+              exit 0
+            fi
+            echo "Push to Overleaf failed (attempt ${attempt}/3); retrying in 30s..."
+            sleep 30
+          done
+          echo "::error::Push to Overleaf failed after 3 attempts."
+          exit 1
