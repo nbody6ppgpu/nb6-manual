@@ -8,6 +8,8 @@ The Overleaf project (`overleaf` remote,
 `https://git.overleaf.com/61a0b9dc74d7e9276e99ea39`) is the human editing
 interface — edit the manual there via the normal Overleaf web UI.
 
+The reading link for overleaf is https://www.overleaf.com/read/hcmxcyffjkzq#89d2bb
+
 ## Sync mechanism
 
 A GitHub Actions workflow (`.github/workflows/overleaf-sync.yml`) keeps
