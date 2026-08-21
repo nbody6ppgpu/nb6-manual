@@ -392,7 +392,7 @@ KZ(42)  & Initial binary distribution \\
         & $=4$: $f=2.5(logP-1)/[45+(logP-1)**2]$; This is a ``34th'' iteration when pre-ms evolution is taken into account with KZ(41)=1 and RBAR<$1.5$ \\
         & $=5$: Duquennoy \& Mayor 1991, Gaussian distribution with mean $\log{P}=4.8$, SDEV in $\log{P}=2.3$. Use Num.Recipes routine \texttt{gasdev.f} to obtain random deviates given ``idum1'' \\
 %        & $=6$: eigen-evolution (Pavel Kroupa \& Rosemary Mardling)\\
-KZ(43)  & (Unused) \\
+KZ(43)  & Reserved for LPS+ code \url{https://github.com/kaiwu-astro/lps_plus} \\
 KZ(44)  & (Unused) \\
 KZ(45)  & $>0$: Computation of Moments of Inertia (with Chr. Theis) in output listing (\texttt{ellan.f}) \\
 KZ(46)  &  HDF5/BINARY/ANSI format output and global parameter output (main output, see chapter~\ref{ch:output} for details) \\
@@ -403,7 +403,7 @@ KZ(46)  &  HDF5/BINARY/ANSI format output and global parameter output (main outp
 KZ(47)  &  Frequency for KZ(46) output. Should be non-negative integer. \\
         &  Output data with time interval $0.5^{KZ(47)} \times SMAX$ \\
 KZ(48)  & $=0,1$: if 1 reduced HDF5 output (no 2nd and 3rd derivatives of force); warning: if KZ(40)=0 initial values wrong, undefined. \\
-KZ(49)  & was used for ellan.f call in output, changed to KZ(45) \\
+KZ(49)  & (Unused) \\
 KZ(50)  & For event data bank, similar to MOCCA. Uses file units with numbers above 200; still under development; to switch on set to 1. \\
 
 \end{longtable}
