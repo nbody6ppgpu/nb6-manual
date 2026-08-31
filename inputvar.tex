@@ -348,7 +348,11 @@ KZ(28)  & Magnetic braking. Gravitational radiation for NS or BH binaries is dia
         & $\ge 2$: Diagnostics at main output (\texttt{brake.f}) \\
         & $=3$: Input of ZMH = 1/SQRT(2*N) (Need KZ(5)$\ge$6) (\texttt{setup.F}) \\
         & $=4$: Set every star as type 13 Neutron star (Need KZ(27)=3) (\texttt{instar.f})  \\
-KZ(29)  & (Reserved for new pulsar treatment decisions, not yet used)  \\
+KZ(29)  & \textcolor{red}{Neutron-star pulsar spin/magnetic-field evolution (\texttt{pulsar.F}), new input element} \\
+        & $=0$: off, no pulsar physics, no behavioural change vs. code without this feature \\
+        & $=1$: on, ordinary NS pulsars born with the \texttt{PSR\_*} birth distribution (see \&INPULSAR, table~\ref{table:inpulsar}) \\
+        & $=2$: on, NS formed via accretion-induced collapse (AIC) use a separate \texttt{PSRM\_*} birth distribution instead of \texttt{PSR\_*} \\
+        & Requires KZ(50)=1 to also record pulsar events to \texttt{pulsar.204} (see below); KZ(29)$>$0 alone enables the physics but writes no event log \\
 KZ(30)  & Hierarchical system regularization \\
         & $=-1$: Use chain only \\
         & $=0$: No triple, quad and chain regularization, only merger \\
@@ -405,6 +409,7 @@ KZ(47)  &  Frequency for KZ(46) output. Should be non-negative integer. \\
 KZ(48)  & $=0,1$: if 1 reduced HDF5 output (no 2nd and 3rd derivatives of force); warning: if KZ(40)=0 initial values wrong, undefined. \\
 KZ(49)  & (Unused) \\
 KZ(50)  & For event data bank, similar to MOCCA. Uses file units with numbers above 200; still under development; to switch on set to 1. \\
+        & \textcolor{red}{Independently of any other KZ(50) usage, controls whether pulsar events (registration, spin-down, RLOF/CE spin-up) are written to \texttt{pulsar.204} (\texttt{PSREVENT}, \texttt{pulsar.F}); unrelated to KZ(29), so KZ(29)=0,KZ(50)=1 opens an always-empty \texttt{pulsar.204}, and KZ(29)$>$0,KZ(50)=0 runs the pulsar physics without writing any event log} \\
 
 \end{longtable}
 
@@ -424,6 +429,33 @@ SMAX    & Maximum time-step (factor of 2 commensurate with 1.0) \\
 LEVEL   & \textcolor{red}{Stellar Evolution Level (see Kamlah et al. 2022), new input element} \\
 \multicolumn{2}{l}{\textcolor{red}{\&INSSE, \&INBSE, \&INCOLL: new NAMELIST blocks read after LEVEL by subroutine READSE,}} \\
 \multicolumn{2}{l}{\textcolor{red}{called from input.F; if blocks are empty in input, defaults according to LEVEL taken.}}
+\end{longtable}
+
+\hrule
+\noindent
+\begin{longtable}{@{}p{2.3cm}p{12.2cm}}
+\caption{\texttt{Input of \&INPULSAR, input.F, needs KZ(29)>0}}
+\label{table:inpulsar}\\\hline
+%
+\multicolumn{2}{l}{\textcolor{red}{\&INPULSAR: new NAMELIST block read by subroutine READPULSAR, called from input.F}} \\
+\multicolumn{2}{l}{\textcolor{red}{immediately after \&INSSE/\&INBSE/\&INCOLL. No-op and not read if KZ(29)=0. On restart}} \\
+\multicolumn{2}{l}{\textcolor{red}{(modify.F, KSTART=2) the pulsar dynamic state (registered NS, spin, field) is restored from}} \\
+\multicolumn{2}{l}{\textcolor{red}{the dump file, but these control parameters are {\bf not} saved in the dump and must be}} \\
+\multicolumn{2}{l}{\textcolor{red}{supplied again by an \&INPULSAR block in the restart input, in the same stream position}} \\
+\multicolumn{2}{l}{\textcolor{red}{(after \&INSSE/\&INBSE/\&INCOLL, before the run resumes) -- a restart input for a KZ(29)>0}} \\
+\multicolumn{2}{l}{\textcolor{red}{run that omits \&INPULSAR will fail to parse the following namelist stream.}} \\\hline
+PSR\_PMODE & Birth distribution of NS pulsar spin period for ordinary NS (KZ(29)=1) or non-AIC NS (KZ(29)=2): $=1$ fixed (PSR\_SPINA, sec); $=2$ uniform (PSR\_SPINA--PSR\_SPINB, sec); $=3$ normal (mean PSR\_SPINA, stdev PSR\_SPINB, sec); $=4$ log-uniform (PSR\_SPINA--PSR\_SPINB, sec) \\
+PSR\_SPINA, PSR\_SPINB & Parameters of the PSR\_PMODE spin-period distribution (sec); meaning depends on PSR\_PMODE \\
+PSR\_BMODE & Birth distribution of NS surface magnetic field for ordinary/non-AIC NS: $=1$ fixed ($10^{\rm PSR\_BMAGA}$ G); $=2$ uniform ($10^{\rm PSR\_BMAGA}$--$10^{\rm PSR\_BMAGB}$ G); $=4$ log-uniform ($10^{\rm PSR\_BMAGA}$--$10^{\rm PSR\_BMAGB}$ G); $=5$ log-normal ($\log_{10}$mean PSR\_BMAGA, $\log_{10}$stdev PSR\_BMAGB) \\
+PSR\_BMAGA, PSR\_BMAGB & Parameters of the PSR\_BMODE magnetic-field distribution ($\log_{10}$ G); meaning depends on PSR\_BMODE \\
+PSRM\_PMODE, PSRM\_SPINA, PSRM\_SPINB & Same as PSR\_PMODE/PSR\_SPINA/PSR\_SPINB but for AIC-formed NS; only read/used if KZ(29)=2 \\
+PSRM\_BMODE, PSRM\_BMAGA, PSRM\_BMAGB & Same as PSR\_BMODE/PSR\_BMAGA/PSR\_BMAGB but for AIC-formed NS; only read/used if KZ(29)=2 \\
+PSR\_BMIN & $\log_{10}$ of the minimum (floor) surface magnetic field a NS decays to (G) \\
+PSR\_RAD & Neutron star radius (km); fixed for all NS (future work: tie to an NS equation-of-state option) \\
+PSR\_TAU & Magnetic field decay timescale (Myr) \\
+PSR\_KAPPA & Magnetic field decay mass scale (accreted mass, $M_\odot$) \\
+PSR\_EP & Efficiency of angular-momentum transfer onto the NS during RLOF spin-up ($0$--$1$) \\
+PSR\_ACC\_CE & Pulsar accretion scenario during common-envelope evolution. \textcolor{red}{Only $=0$ (no CE accretion) is currently supported; modes 1 and 2 are under development and rejected at input with a FATAL ERROR (\texttt{input.F}) rather than silently mis-simulated.} \\
 \end{longtable}
 
 % & \texttt{if (kz(4).gt.0)} (suppressed now) \\

@@ -137,7 +137,20 @@ All these parameters will in the future become part of the input file using the 
 		\end{table}
 	\end{landscape}
 	\endgroup
-	
+
+
+\subsection{Pulsar spin/magnetic-field evolution (KZ(29))}
+\label{sec:pulsar}
+
+Neutron-star pulsar spin period and surface magnetic field evolution is controlled by \texttt{KZ(29)} and the \&INPULSAR namelist block (see table~\ref{table:inpulsar} and \texttt{pulsar.F}, \texttt{mdot.F}, \texttt{roche.f}). \texttt{KZ(29)=0} disables the feature entirely, with no change to any other output compared to a build without this feature. \texttt{KZ(29)=1} enables ordinary NS pulsar birth spins/fields; \texttt{KZ(29)=2} additionally distinguishes NS formed via accretion-induced collapse (AIC), giving them a separate birth distribution (\texttt{PSRM\_*}).
+
+Pulsar events (registration at birth, isolated spin-down, RLOF spin-up, common-envelope spin-up) are optionally logged to \texttt{pulsar.204} via the single entry point \texttt{PSREVENT} in \texttt{pulsar.F}, gated independently by \texttt{KZ(50)=1} (see table~\ref{table:ininput37}); \texttt{KZ(29)} and \texttt{KZ(50)} are otherwise unrelated switches.
+
+\paragraph{Known limitation: fixed orthogonal rotator.} The spin-down torque calculation (\texttt{PSRALPHA} in \texttt{mdot.F} and \texttt{roche.f}) is hardcoded to $\pi/2$ (an orthogonal rotator, magnetic axis perpendicular to spin axis) for every pulsar; there is currently no input parameter or distribution to vary this angle per star. This is a simplification inherited from the underlying pulsar spin-down physics model, not a bug, but users comparing to observed pulsar populations (which show a range of magnetic obliquities) should be aware that obliquity-dependent effects are not captured by this version.
+
+\paragraph{Common-envelope accretion: under development.} \texttt{PSR\_ACC\_CE} selects how an accreting pulsar's spin/field respond during common-envelope evolution. Only \texttt{PSR\_ACC\_CE=0} (no CE accretion onto the pulsar) is currently implemented; modes 1 and 2 are still under development and are rejected at input with a \texttt{FATAL ERROR} rather than silently running an unvalidated model.
+
+\paragraph{Restart requirement.} The dynamic pulsar state (which stars are registered NS pulsars, and their current spin/field) is preserved across a restart via the ordinary dump/restart mechanism (\texttt{mydump.F}). The \&INPULSAR \emph{control} parameters (birth distributions, \texttt{PSR\_ACC\_CE}, etc.) are \emph{not} saved in the dump, and must be supplied again in the restart input file's \&INPULSAR block, in the same namelist stream position as for a fresh start (after \&INSSE/\&INBSE/\&INCOLL). Omitting \&INPULSAR from a \texttt{KZ(29)>0} restart will misalign the namelist stream and cause the following reads to fail.
 
 
 
