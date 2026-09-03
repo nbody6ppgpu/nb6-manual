@@ -409,7 +409,7 @@ KZ(47)  &  Frequency for KZ(46) output. Should be non-negative integer. \\
 KZ(48)  & $=0,1$: if 1 reduced HDF5 output (no 2nd and 3rd derivatives of force); warning: if KZ(40)=0 initial values wrong, undefined. \\
 KZ(49)  & (Unused) \\
 KZ(50)  & For event data bank, similar to MOCCA. Uses file units with numbers above 200; still under development; to switch on set to 1. \\
-        & \textcolor{red}{Independently of any other KZ(50) usage, controls whether pulsar events (registration, spin-down, RLOF/CE spin-up) are written to \texttt{pulsar.204} (\texttt{PSREVENT}, \texttt{pulsar.F}); unrelated to KZ(29), so KZ(29)=0,KZ(50)=1 opens an always-empty \texttt{pulsar.204}, and KZ(29)$>$0,KZ(50)=0 runs the pulsar physics without writing any event log} \\
+        & \textcolor{red}{Independently of any other KZ(50) usage, controls whether pulsar events (registration, spin-down, RLOF spin-up, common-envelope mass bookkeeping) are written to \texttt{pulsar.204} (\texttt{PSREVENT}, \texttt{pulsar.F}); unrelated to KZ(29), so KZ(29)=0,KZ(50)=1 opens an always-empty \texttt{pulsar.204}, and KZ(29)$>$0,KZ(50)=0 runs the pulsar physics without writing any event log} \\
 
 \end{longtable}
 
@@ -455,7 +455,7 @@ PSR\_RAD & Neutron star radius (km); fixed for all NS (future work: tie to an NS
 PSR\_TAU & Magnetic field decay timescale (Myr) \\
 PSR\_KAPPA & Magnetic field decay mass scale (accreted mass, $M_\odot$) \\
 PSR\_EP & Efficiency of angular-momentum transfer onto the NS during RLOF spin-up ($0$--$1$) \\
-PSR\_ACC\_CE & Pulsar accretion scenario during common-envelope evolution. \textcolor{red}{Only $=0$ (no CE accretion) is currently supported; modes 1 and 2 are under development and rejected at input with a FATAL ERROR (\texttt{input.F}) rather than silently mis-simulated.} \\
+PSR\_ACC\_CE & Pulsar accretion scenario during common-envelope evolution. \textcolor{red}{Only $=0$ (no CE accretion) is currently supported; modes 1 and 2 are rejected at input with a FATAL ERROR (\texttt{input.F}) rather than silently mis-simulated. Mode 2 additionally has known implementation defects (see \texttt{parameters.tex}) and is not just unvalidated but not mergeable in its current form.} \\
 \end{longtable}
 
 % & \texttt{if (kz(4).gt.0)} (suppressed now) \\
