@@ -18,7 +18,7 @@ Inspired by MOCCA several files are written (if KZ(50)=1) containing formatted d
 File Name & Description & Routine & Comment \\\hline
 %
 xrb.203  & X-ray binaries & roche.f & Start/End/Coal \\
-pulsar.204 & pulsars & ?  & to be done \\
+pulsar.204 & pulsars & pulsar.F & birth, spin evolution, CE bookkeeping, merger reconciliation and registry retirement \\
 ks.210 & ks binaries & kspinit.F ksinit.F subint.F ksterm.F & NEW / END KSREG, and type change or DM>5\% \\
 wdnsbh.211 & wd, ns, bh formation & mdot.F & \\
 compb.212 & wd, ns, bh binary & ksinit.F & only formation printed \\
@@ -49,13 +49,47 @@ This is a starting point, some data may be overlapping, and the structure may be
      &            ROL(2),DMA(1)-DMR(1),DMA(2)-DMR(2),DM1,DM2,TB,Lx,
      &            Mdot_RLOF,BMAG(1),BMAG(2)
 \end{verbatim}
- Note: that magnetic field is added, even though it is not yet implemented for pulsars. Also spins and initial masses added (Aug. 10).
+ Note: magnetic fields, spins and initial masses are included in this record.
 
-\subsection{pulsar.204; ? }
+\subsection{pulsar.204; pulsar.F }
 \begin{verbatim}
-                WRITE(204,..)
+      WRITE (204,61) ICODE, TTOT*TSTAR, NAMENS(NSINDEX),
+     &     XMNS(NSINDEX), BMAGNS(NSINDEX), PERIODNS(NSINDEX),
+     &     PDOTNS(NSINDEX), AGENSX(NSINDEX), AGENS0(NSINDEX),
+     &     BMAGNS0(NSINDEX), XMNS0(NSINDEX), PSR_TAU
+   61 FORMAT('PULSAR ',I2,1P,E17.9,I10,9E17.9)
 \end{verbatim}
-to be implemented later.
+
+Records are written only on rank zero when \texttt{KZ(50)=1}. After the event code, physical event time \texttt{TTOT*TSTAR} (Myr), and registry \texttt{NAME}, the nine \texttt{E17.9} fields are:
+
+\begin{longtable}{@{}p{0.8cm} p{2.5cm} p{10.5cm}}
+\hline
+No. & Field & Meaning and unit \\\hline
+1 & \texttt{XMNS} & current neutron-star mass ($M_\odot$) \\
+2 & \texttt{BMAGNS} & current surface magnetic field (Tesla) \\
+3 & \texttt{PERIODNS} & current spin period (s) \\
+4 & \texttt{PDOTNS} & current spin-period derivative (s/s) \\
+5 & \texttt{AGENSX} & physical time of the most recent pulsar-state update (Myr) \\
+6 & \texttt{AGENS0} & physical start time saved when a new RLOF episode begins (Myr; zero before the first such episode) \\
+7 & \texttt{BMAGNS0} & surface magnetic field saved at the start of that RLOF episode (Tesla) \\
+8 & \texttt{XMNS0} & neutron-star mass saved at the start of that RLOF episode ($M_\odot$) \\
+9 & \texttt{PSR\_TAU} & magnetic-field decay timescale (Myr); this is a global input parameter rather than a \texttt{/PSRDAT/} registry array \\
+\hline
+\end{longtable}
+
+The event codes are:
+
+\begin{longtable}{@{}p{0.8cm} p{13.0cm}}
+\hline
+Code & Meaning \\\hline
+1 & neutron-star birth registration by \texttt{PSRREG} \\
+2 & isolated spin-down update \\
+3 & stable RLOF spin-up update \\
+4 & common-envelope mass-bookkeeping step; the event is instantaneous for the pulsar clock and does not evolve spin or magnetic field \\
+5 & merger reconciliation of the retained registry slot. If its \texttt{NAME} changes, two code-5 records are written consecutively with no intervening event: the old-\texttt{NAME} slot snapshot first, before the remnant mass update, and the final-\texttt{NAME} remnant snapshot second. If \texttt{NAME} does not change, only the final single record is written \\
+6 & final snapshot of a registry slot immediately before \texttt{PSRREG\_REMOVE} compacts the arrays; the fields are the retiring values, before another slot can be moved over that array index \\
+\hline
+\end{longtable}
 
 \subsection{ks.210 ; kspinit.F ksinit.F subint.F ksterm.F }
 \begin{verbatim}
