@@ -87,7 +87,7 @@ Code & Meaning \\\hline
 3 & stable RLOF spin-up update \\
 4 & common-envelope mass-bookkeeping step; the event is instantaneous for the pulsar clock and does not evolve spin or magnetic field \\
 5 & merger reconciliation of the retained registry slot. If its \texttt{NAME} changes, two code-5 records are written consecutively with no intervening event: the old-\texttt{NAME} slot snapshot first, before the remnant mass update, and the final-\texttt{NAME} remnant snapshot second. If \texttt{NAME} does not change, only the final single record is written \\
-6 & final snapshot of a registry slot immediately before \texttt{PSRREG\_REMOVE} compacts the arrays; the fields are the retiring values, before another slot can be moved over that array index \\
+6 & final snapshot of a registry slot retired by merger or a committed NS-to-non-NS stellar transition (including accretion-induced collapse to a BH), immediately before \texttt{PSRREG\_REMOVE} compacts the arrays; the fields are the retiring values, before another slot can be moved over that array index \\
 \hline
 \end{longtable}
 

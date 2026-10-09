@@ -352,6 +352,7 @@ KZ(29)  & \textcolor{red}{Neutron-star pulsar spin/magnetic-field evolution (\te
         & $=0$: off, no pulsar physics, no behavioural change vs. code without this feature \\
         & $=1$: on, ordinary NS pulsars born with the \texttt{PSR\_*} birth distribution (see \&INPULSAR, table~\ref{table:inpulsar}) \\
         & $=2$: on, NS formed via accretion-induced collapse (AIC) use a separate \texttt{PSRM\_*} birth distribution instead of \texttt{PSR\_*} \\
+        & Requires KZ(19)$\geq3$. Fresh type-13 initial stars are rejected (no pulsar history); use a compatible pulsar-state restart. \\
         & Requires KZ(50)=1 to also record pulsar events to \texttt{pulsar.204} (see below); KZ(29)$>$0 alone enables the physics but writes no event log \\
 KZ(30)  & Hierarchical system regularization \\
         & $=-1$: Use chain only \\
